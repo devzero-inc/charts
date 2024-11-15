@@ -52,9 +52,8 @@ kube-prometheus-stack:
         - url: "https://mimir.devzero.dev/api/v1/push"
           headers:
             X-Scope-OrgID: "1"
-          write_relabel_configs:
-            - source_labels: []
-              target_label: "region"
+          writeRelabelConfigs:
+            - targetLabel: "region"
               replacement: "self-hosted"
 
 rook-ceph:

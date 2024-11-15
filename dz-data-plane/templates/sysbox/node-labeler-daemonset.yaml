@@ -16,7 +16,7 @@ spec:
       serviceAccountName: sysbox-label-node
       containers:
         - name: node-labeler
-          image: bitnami/kubectl:latest
+          image: docker.io/bitnami/kubectl:latest
           imagePullPolicy: Always
           command:
             - /bin/sh
