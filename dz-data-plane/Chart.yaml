@@ -13,9 +13,9 @@ dependencies:
   - name: external-secrets
     version: 0.10.5
     repository: https://charts.external-secrets.io
-#  - name: rook-ceph-cluster
-#    version: 1.14.9
-#    repository: https://charts.rook.io/release
+  - name: rook-ceph-cluster
+    version: 1.14.9
+    repository: https://charts.rook.io/release
   - name: metacontroller-helm
     version: 4.11.19
     repository: oci://ghcr.io/metacontroller

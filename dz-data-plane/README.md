@@ -1,17 +1,24 @@
-# DevZero Self Hosted Charts
+# DevZero Data Plane Self Hosted Chart
 
 ## Installation
 
 ```bash
 helm install dz-data-plane oci://public.ecr.aws/v1i4e1r2/charts/dz-data-plane \
   -n devzero-self-hosted \
-  --version 0.1.0 \
-  --set vault.approle.secretId=<VAULT_APPROLE_SECRET_ID> \
+  --version 0.1.2 \
   --set cedana-helm.cedanaConfig.signozAccessToken=<CEDANA_SIGNOZ_ACCESS_TOKEN> \
   --set cedana-helm.cedanaConfig.cedanaAuthToken=<CEDANA_AUTH_TOKEN>
 ```
 
-## Configuration
+Get the credentials to connect your DevZero Data Plane to the Control Plane.
+
+```bash
+kubectl get secret devzero-sa-token -n devzero-self-hosted -o jsonpath='{.data.token}' | base64 -d
+kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.server}'
+kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'
+```
+
+### Node Labeling
 
 The cluster has a node labeler DaemonSet that labels all nodes with the following labels:
 
@@ -26,3 +33,12 @@ To separate resources into different node groups, disable the node labeler Daemo
 ```bash
 --set sysbox.nodeLabeler.enabled=false
 ```
+
+### Namespace
+
+If using a namespace other than `devzero-self-hosted`, set the namespace:
+
+```bash
+--set namespace=<NAMESPACE>
+```
+
