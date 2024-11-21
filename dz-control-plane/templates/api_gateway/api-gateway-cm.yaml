@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  self_hosted.yaml: |
+    listener_endpoint: "0.0.0.0:{{ .Values.api_gateway.service.port }}"
+    listener_tls: false
+    prometheus_port: {{ .Values.api_gateway.service.metricsPort }}
+    healthcheck_port: 8081
+    refresh_jwks_timer: 3600
+    log:
+      filepath:
+        - stdout
+    vaulted_auth_public_key: {{ .Values.auth.public_key | quote }}
+    backend_url: http://backend:8444
