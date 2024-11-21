@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.api_gateway.annotations | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  replicas: {{ .Values.api_gateway.replicas }}
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "devzero.podLabels" (dict "ctx" . "component" "api_gateway") | nindent 8 }}
+      annotations:
+        {{- include "devzero.podAnnotations" (dict "ctx" . "component" "api_gateway") | nindent 8 }}
+    spec:
+      {{- with .Values.api_gateway.schedulerName }}
+      schedulerName: {{ . | quote }}
+      {{- end }}
+      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
+      {{- if .Values.api_gateway.priorityClassName }}
+      priorityClassName: {{ .Values.api_gateway.priorityClassName }}
+      {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.api_gateway.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.api_gateway.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.api_gateway.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+          image: "{{ .Values.image.repository }}/{{ .Values.api_gateway.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.api_gateway.service.port }}
+              protocol: TCP
+            - name: metrics-port
+              containerPort: {{ .Values.api_gateway.service.metricsPort }}
+              protocol: TCP
+            - containerPort: 8081
+              name: health
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: health
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: health
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            {{ toYaml .Values.api_gateway.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /app/api-gateway/config/self_hosted.yaml
+              name: config
+          env:
+            - name: ENVIRONMENT
+              value: "self_hosted"
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}

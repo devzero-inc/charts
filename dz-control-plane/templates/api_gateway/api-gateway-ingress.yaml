@@ -1,0 +1,44 @@
+{{- if .Values.api_gateway.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+  {{- with .Values.api_gateway.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.api_gateway.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.api_gateway.ingress.ingressClassName }}
+  {{- end -}}
+  {{- if .Values.api_gateway.ingress.tls }}
+  tls:
+    {{- range .Values.api_gateway.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.api_gateway.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "api_gateway") }}
+                port:
+                  number: {{ $.Values.api_gateway.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}

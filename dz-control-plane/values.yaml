@@ -1,0 +1,118 @@
+# -- Overrides the chart's name.
+nameOverride: null
+
+# -- Overrides the chart's computed fullname.
+fullnameOverride: null
+
+image:
+  # -- Devzero container image repository'
+  repository: 056855531191.dkr.ecr.us-west-2.amazonaws.com
+  # -- Devzero container image tag'
+  tag: "v0.0.0"
+  # -- Container pull policy
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets
+  pullSecrets: []
+
+global:
+  podAnnotations: {}
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use
+  name: "devzero"
+
+auth:
+  # -- Base64 encoded public key for JWT verification
+  public_key: ""
+
+api_gateway:
+  # -- Number of replicas for Api Gateway
+  replicas: 3
+
+  imageName: "api-gateway"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Api Gateway autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Api Gateway
+    enabled: false
+    # -- Minimum autoscaling replicas for Api Gateway
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Api Gateway
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Api Gateway
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Api Gateway
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Api Gateway
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Api Gateway
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Api Gateway service configuration
+  service:
+    # -- Port of the Api Gateway service
+    port: 8443
+    # -- Port of the Api Gateway Metrics service
+    metricsPort: 9090
+    # -- Type of the Api Gateway service
+    type: ClusterIP
+    # -- Annotations for the Api Gateway service
+    annotations: {}
+    # -- Labels for the Api Gateway service
+    labels: {}
+
+  # Api Gateway ingress configuration
+  ingress:
+    # -- Specify if the Api Gateway Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Api Gateway ingress
+    annotations: {}
+    # -- hosts configuration for the Api Gateway ingress
+    hosts:
+      - host: api.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Api Gateway ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - api.devzero.example.com
+
