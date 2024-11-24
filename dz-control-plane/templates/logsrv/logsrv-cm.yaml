@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "logsrv") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "logsrv") | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  self_hosted.yaml: |
+    service_port: 8884
+    health_probe_port: 9999
+    log_level: debug
+    
+    postgres_url: "" # from envvar
+    pgpassword: "" # from envvar
+    queue_url: ""
+    num_consumers: 20
+    
+    self_hosted: false
+    
+    allowed_cors_origins:
+    - http://localhost:3000
+    
+    auth0_domains:
+    - devinfra.us.auth0.com
+    - auth.devzero.io
+    auth0_audience:
+    - https://devinfra.io/webapi
+    - https://devinfra.us.auth0.com/api/v2/
+    refresh_jwks_timer: 3600
+    vaulted_auth_public_key: ""

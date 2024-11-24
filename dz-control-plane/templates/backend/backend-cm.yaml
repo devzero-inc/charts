@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "backend") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "backend") | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  self_hosted.yaml: |
+    prometheus_port: 9090
+    healthcheck_port: 8080
+    listener_endpoint: "0.0.0.0:{{ .Values.backend.service.port }}"
+    redis_url: "" # from env variable
+    mongodb_url: "" # from env variable
+    pulse_host: http://pulse.lda.svc.cluster.local
+    pulse_port: 9990
+    log:
+      filepath:
+        - stdout
+      level: debug
+    sendgrid_api_key: "" # managed in vault
+    auth0_client_id: lcfHtSd24HeO3Wo7Jcm3MzhdpLnHo2nR
+    auth0_api_client_id: "" # managed in vault
+    auth0_api_client_secret: "" # managed in vault
+    polland_url: http://polland:8000
+    default_cli_version: latest
+    default_cli_install_dir: /usr/local/bin
+    hydra_url: https://hydra.devzero.dev/
+    control_plane_url: https://api.devzero.dev
+    hydra_api_key: "" # managed in vault
+    download_cli_script_url: "https://get.devzero.io"
+    default_subnet_selector:
+      ap-south-1: subnet-0fec74fdb733b93f7
+      us-west-1: subnet-0b566588698169939
+      eu-west-1: subnet-0c6d09e1d8ed15aee
+    production: true
+    default_team_type: "INTERNAL"
+    posthog:
+      endpoint: "https://app.posthog.com"
+      personal-api-key: ""
+      # This is a write-only key, and it's fine for this to be public
+      # For more info, see here: https://us.posthog.com/settings/project-details#variables
+      api-key: "phc_kLaaAhPtBFA5Rk3wm9x4PmCDpa9eYTwg1EPCJOKhHEa"
+      project-id: 48408
+    shared_storage:
+      allowed_team: "team-5660bca9e0b6467ab5972a53b4384055" # voltrondata team
+      ceph_cluster_id: "7c606d50-3c69-4ecf-940b-ca87e41adfad"
+      ceph_filesystem_name: "cephfs"
+      ceph_filesystem_path: "/volumes/cache"
+      ceph_monitor_address: "v2:10.3.2.17:3300/0 v2:10.3.0.21:3300/0 v2:10.3.1.88:3300/0"
+      ceph_user_credentials: "" # managed in vault
+      ceph_username: "vuser"
+    environment: preproduction
+    default_dz_base_image_tag: base-latest 
+    devzero_team_id: team-82122a716f0147ffb274d8f2bf8b56b3
+    logsrv_default_queue: "https://sqs.us-west-2.amazonaws.com/710984755704/logsrv.fifo"
+    logsrv_default_region: "us-west-2"
+    github_app_id: 1046354
+    github_app_private_key: "" # managed in vault
+    stripe:
+      api_key: ""
+      webhook_signing_secret: ""
+      auto_create_subscriptions: "true"
+    grafana:
+      enabled: true
+      url: grafana.devzero.dev
+      datasource_id: d1a458fc-7ae0-46eb-95f8-16a6d65f7742
+      dora_datasource_id: c8bd8fa1-2a68-4ad3-9640-f04609266227
+      oda_datasource_id: c5820276-9265-437b-9072-236a93ddbe56
+      password: "" # managed in vault
+    self_hosted: false
+    jwt_private_key: ""
+    license_key: ""
+    arch: "amd64"
+    docker_registry: ""
+    service_keys:
+      cortex: "" # managed in vault
+    vaulted_auth_private_key: "" # managed in vault
+    cli_session_url_template: "https://devzero.dev/dashboard/settings/user-settings?cli-session-id=%s"
+    auto_hibernation_enabled: true
+    cost_prometheus_url: "http://mimir-nginx.kube-prometheus-stack.svc:80/prometheus"

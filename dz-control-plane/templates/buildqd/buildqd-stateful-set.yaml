@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "buildqd") | nindent 4 }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  serviceName: "buildqd"
+  replicas: {{ .Values.buildqd.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "devzero.selectorLabels" (dict "ctx" . "component" "buildqd") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "devzero.selectorLabels" (dict "ctx" . "component" "buildqd") | nindent 8 }}
+      annotations:
+        {{- include "devzero.podAnnotations" (dict "ctx" . "component" "buildqd") | nindent 8 }}
+    spec:
+      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
+      containers:
+        - name: buildqd
+          image: "{{ .Values.image.repository }}/{{ .Values.buildqd.imageName }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.buildqd.service.port }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.buildqd.service.metricsPort }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.buildqd.resources | nindent 12 }}
+          volumeMounts:
+            - name: buildqd-config
+              mountPath: /etc/buildqd
+            - name: buildkit-state
+              mountPath: /var/lib/buildkit
+        - name: buildkitd
+          image: "{{ .Values.buildqd.buildkit.image.repository }}:{{ .Values.buildqd.buildkit.image.tag }}"
+          imagePullPolicy: {{ .Values.buildqd.buildkit.image.pullPolicy }}
+          ports:
+            - name: buildkit
+              containerPort: 1234
+              protocol: TCP
+          volumeMounts:
+            - name: buildkit-config
+              mountPath: /etc/buildkit
+            - name: buildkit-state
+              mountPath: /var/lib/buildkit
+          resources:
+            {{- toYaml .Values.buildqd.buildkit.resources | nindent 12 }}
+      volumes:
+        - name: buildqd-config
+          configMap:
+            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}
+        - name: buildkit-config
+          configMap:
+            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}-buildkit
+        - name: buildkit-state
+          emptyDir: {} # Replace with PersistentVolumeClaim if needed
