@@ -1,5 +1,11 @@
 namespace: &namespace devzero-self-hosted
 
+devzero:
+  teamId: ""
+  region: ""
+  vault:
+    server: "https://csi.devzero.io"
+
 nodeLabeler:
   enabled: true
 
