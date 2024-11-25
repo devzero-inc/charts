@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   self_hosted.yaml: |
-    sentry_environment: preproduction 
+    use_sentry: false
     redis_address: localhost:6379
     metrics_address: 0.0.0.0:9090
     polland_address: http://polland:8000

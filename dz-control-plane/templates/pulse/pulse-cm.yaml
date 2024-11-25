@@ -7,3 +7,23 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   self_hosted.yaml: |
+    server_grpc_host: 0.0.0.0
+    server_grpc_port: 9990
+    environment: production 
+    metrics_address: 0.0.0.0:9090
+    sentry_debug: false
+    sentry_dsn: ""
+    use_timescale: true
+    postgres_password: 
+    postgres_user: 
+    postgres_host: 
+    postgres_port: 36664
+    postgres_database: tsdb 
+    postgres_ssl: require
+    mysql_user: pulse 
+    mysql_password: 
+    mysql_host: pulse-db
+    mysql_port: 3306
+    mysql_database: pulse 
+    dev_lake_encryption_secret: 
+    open_api_token: 
