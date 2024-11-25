@@ -7,13 +7,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   self_hosted.yaml: |
-    prometheus_port: 9090
+    prometheus_port: {{ .Values.backend.service.metricsPort }}
     healthcheck_port: 8080
     listener_endpoint: "0.0.0.0:{{ .Values.backend.service.port }}"
     redis_url: "" # from env variable
     mongodb_url: "" # from env variable
-    pulse_host: http://pulse.lda.svc.cluster.local
-    pulse_port: 9990
+    pulse_host: http://pulse
+    pulse_port: {{ .Values.pulse.service.port }}
     log:
       filepath:
         - stdout
@@ -22,7 +22,7 @@ data:
     auth0_client_id: lcfHtSd24HeO3Wo7Jcm3MzhdpLnHo2nR
     auth0_api_client_id: "" # managed in vault
     auth0_api_client_secret: "" # managed in vault
-    polland_url: http://polland:8000
+    polland_url: "http://polland:{{ .Values.polland.service.port }}"
     default_cli_version: latest
     default_cli_install_dir: /usr/local/bin
     hydra_url: https://hydra.devzero.dev/
@@ -36,14 +36,9 @@ data:
     production: true
     default_team_type: "INTERNAL"
     posthog:
-      endpoint: "https://app.posthog.com"
-      personal-api-key: ""
-      # This is a write-only key, and it's fine for this to be public
-      # For more info, see here: https://us.posthog.com/settings/project-details#variables
-      api-key: "phc_kLaaAhPtBFA5Rk3wm9x4PmCDpa9eYTwg1EPCJOKhHEa"
-      project-id: 48408
+      fake: true
     shared_storage:
-      allowed_team: "team-5660bca9e0b6467ab5972a53b4384055" # voltrondata team
+      allowed_team: "team-5660bca9e0b6467ab5972a53b4384055"
       ceph_cluster_id: "7c606d50-3c69-4ecf-940b-ca87e41adfad"
       ceph_filesystem_name: "cephfs"
       ceph_filesystem_path: "/volumes/cache"
