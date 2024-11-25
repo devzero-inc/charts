@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
   labels:
-    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+    {{- include "devzero.labels" (dict "ctx" . "component" "hydra") | nindent 4 }}
   annotations:
-    {{- toYaml .Values.api_gateway.annotations | nindent 4 }}
+    {{- toYaml .Values.hydra.annotations | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: {{ .Values.api_gateway.replicas }}
+  replicas: {{ .Values.hydra.replicas }}
   revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
@@ -16,20 +16,20 @@ spec:
       maxSurge: 25%
       maxUnavailable: 0
   selector:
-     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "hydra") | nindent 4 }}
   template:
     metadata:
       labels:
-        {{- include "devzero.podLabels" (dict "ctx" . "component" "api_gateway") | nindent 8 }}
+        {{- include "devzero.podLabels" (dict "ctx" . "component" "hydra") | nindent 8 }}
       annotations:
-        {{- include "devzero.podAnnotations" (dict "ctx" . "component" "api_gateway") | nindent 8 }}
+        {{- include "devzero.podAnnotations" (dict "ctx" . "component" "hydra") | nindent 8 }}
     spec:
-      {{- with .Values.api_gateway.schedulerName }}
+      {{- with .Values.hydra.schedulerName }}
       schedulerName: {{ . | quote }}
       {{- end }}
       serviceAccountName: {{ template "devzero.serviceAccountName" . }}
-      {{- if .Values.api_gateway.priorityClassName }}
-      priorityClassName: {{ .Values.api_gateway.priorityClassName }}
+      {{- if .Values.hydra.priorityClassName }}
+      priorityClassName: {{ .Values.hydra.priorityClassName }}
       {{- end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -37,28 +37,28 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- with .Values.api_gateway.nodeSelector }}
+      {{- with .Values.hydra.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.api_gateway.affinity }}
+      {{- with .Values.hydra.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.api_gateway.tolerations }}
+      {{- with .Values.hydra.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
-          image: "{{ .Values.image.repository }}/{{ .Values.api_gateway.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
+          umage: "{{ .Values.image.repository }}/{{ .Values.hydra.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.api_gateway.service.port }}
+              containerPort: {{ .Values.hydra.service.port }}
               protocol: TCP
             - name: metrics-port
-              containerPort: {{ .Values.api_gateway.service.metricsPort }}
+              containerPort: {{ .Values.hydra.service.metricsPort }}
               protocol: TCP
             - containerPort: 8081
               name: health
@@ -84,7 +84,7 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           resources:
-            {{ toYaml .Values.api_gateway.resources | nindent 12 }}
+            {{ toYaml .Values.hydra.resources | nindent 12 }}
           volumeMounts:
             - mountPath: /app/api-gateway/config/self_hosted.yaml
               name: config
@@ -94,4 +94,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+            nameu {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
