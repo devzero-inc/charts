@@ -1,0 +1,44 @@
+{{- if .Values.hydra.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "hydra") | nindent 4 }}
+  {{- with .Values.hydra.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.hydra.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.hydra.ingress.ingressClassName }}
+  {{- end -}}
+  {{- if .Values.hydra.ingress.tls }}
+  tls:
+    {{- range .Values.hydra.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.hydra.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "hydra") }}
+                port:
+                  number: {{ $.Values.hydra.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}
