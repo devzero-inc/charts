@@ -5,9 +5,11 @@
 ```bash
 helm install dz-data-plane oci://public.ecr.aws/v1i4e1r2/charts/dz-data-plane \
   -n devzero-self-hosted \
-  --version 0.1.2 \
+  --version 0.1.3 \
   --set cedana-helm.cedanaConfig.signozAccessToken=<CEDANA_SIGNOZ_ACCESS_TOKEN> \
-  --set cedana-helm.cedanaConfig.cedanaAuthToken=<CEDANA_AUTH_TOKEN>
+  --set cedana-helm.cedanaConfig.cedanaAuthToken=<CEDANA_AUTH_TOKEN> \
+  --set devzero.teamId=<TEAM_ID> \
+  --set devzero.region=<REGION>
 ```
 
 Get the credentials to connect your DevZero Data Plane to the Control Plane.
