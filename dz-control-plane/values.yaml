@@ -867,3 +867,143 @@ web:
       - secretName: devzero-api-tls
         hosts:
           - devzero.example.com
+
+#### External dependencies ####
+
+# Vault external dependencies
+#vault:
+
+# Minio external dependencies
+#minio:
+
+# Postgres external dependencies
+postgres:
+  logsrv:
+    metrics:
+      enabled: true
+    
+    primary:
+      persistence:
+        size: "50Gi"
+    
+    auth:
+      database: "logsrv"
+      username: "devzero"
+      password: ""
+    
+    architecture: "standalone"
+
+  hydra:
+    metrics:
+      enabled: true
+    
+    primary:
+      persistence:
+        size: "50Gi"
+    
+    auth:
+      database: "hydra"
+      username: "hydra"
+      password: ""
+
+    architecture: "standalone"
+
+  pulse:
+
+# Mysql external dependencies 
+mysql:
+  polland:
+    auth:
+      username: "polland"
+      database: "polland"
+      password: ""
+
+  pulse:
+      username: "pulse"
+      database: "pulse"
+      password: ""
+
+# MongoDB external dependencies
+mongodb:
+  metrics:
+    enabled: true
+    containerPort: 9090
+  
+  persistence:
+    size: "50Gi"
+  
+  architecture: "replicaset"
+  
+  auth:
+    usernames:
+      - "devzero"
+    databases:
+      - "backend"
+    passwords:
+      - ""
+
+# Redis external dependencies
+redis:
+  backend:
+    architecture: "standalone"
+    
+    master:
+      persistence:
+        enabled: true
+      serviceAccount:
+        create: false
+    
+    serviceAccount:
+      create: false
+    
+    auth:
+      password: ""
+    
+    replica:
+      replicaCount: 0
+
+  hydra:
+    architecture: "standalone"
+    
+    master:
+      persistence:
+        enabled: true
+      serviceAccount:
+        create: false
+    
+    serviceAccount:
+      create: false
+    
+    auth:
+      password: ""
+    
+    replica:
+      replicaCount: 0
+
+  polland:
+    architecture: "standalone"
+    
+    master:
+      persistence:
+        enabled: true
+      serviceAccount:
+        create: false
+    
+    serviceAccount:
+      create: false
+    
+    auth:
+      password: ""
+    
+    replica:
+      replicaCount: 0
+
+# TimescaleDB external dependencies
+timescaledb-single:
+  replicaCount: 1
+  secrets:
+    credentials:
+      PATRONI_SUPERUSER_PASSWORD: ""
+      PATRONI_REPLICATION_PASSWORD: ""
+      PATRONI_admin_PASSWORD: ""
+

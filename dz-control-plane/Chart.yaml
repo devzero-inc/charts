@@ -16,6 +16,12 @@ dependencies:
     condition: minio.enabled
   # TODO: helm chart for sqs drop-in replacement (or allow logsrv to use kafka)
   - name: mysql
+    alias: mysql-polland
+    version: 11.1.19
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: mysql
+    alias: mysql-pulse
     version: 11.1.19
     repository: https://charts.bitnami.com/bitnami
     condition: mysql.enabled
@@ -24,14 +30,39 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: mongodb.enabled
   - name: redis
+    alias: redis-backend
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
+    alias: redis-hydra
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
+    alias: redis-polland
     version: 20.2.1
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: postgresql
+    alias: postgres-logsrv
     version: 16.0.4
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
+  - name: postgresql
+    alias: postgres-hydra
+    version: 16.0.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: timescaledb-single
+    version: 0.33.1
+    repository: https://charts.timescale.com
+    condition: timescale.enabled
   - name: artifactory
     version: 107.90.15
     repository: https://charts.jfrog.io
     condition: artifactory.enabled
+  - name: elasticmq 
+    version: 0.2.0
+    repository: https://chatwork.github.io/charts
+    condition: elasticmq.enabled
