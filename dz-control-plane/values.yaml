@@ -116,3 +116,658 @@ api_gateway:
         hosts:
           - api.devzero.example.com
 
+
+backend:
+  # -- Number of replicas for Backend 
+  replicas: 1
+
+  imageName: "backend"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Backend autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Backend
+    enabled: false
+    # -- Minimum autoscaling replicas for Backend
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Backend
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Backend
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Backend
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Backend
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Backend
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Api Gateway service configuration
+  service:
+    # -- Port of the Backend service
+    port: 8443
+    # -- Port of the Backend Metrics service
+    metricsPort: 9090
+    # -- Type of the Backend service
+    type: ClusterIP
+    # -- Annotations for the Backend service
+    annotations: {}
+    # -- Labels for the Backend service
+    labels: {}
+
+
+hydra:
+  # -- Number of replicas for Hydra
+  replicas: 1
+
+  imageName: "hydra"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Hydra autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Hydra
+    enabled: false
+    # -- Minimum autoscaling replicas for Hydra
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Hydra
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Hydra
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Hydra
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Hydra
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Hydra
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Hydra service configuration
+  service:
+    # -- Port of the Hydra service
+    port: 8443
+    # -- Port of the Hydra Metrics service
+    metricsPort: 9090
+    # -- Type of the Hydra service
+    type: ClusterIP
+    # -- Annotations for the Hydra service
+    annotations: {}
+    # -- Labels for the Hydra service
+    labels: {}
+
+  # Hydra ingress configuration
+  ingress:
+    # -- Specify if the Hydra Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Hydra ingress
+    annotations: {}
+    # -- hosts configuration for the Hydra ingress
+    hosts:
+      - host: hydra.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Hydra ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - hydra.devzero.example.com
+
+logsrv:
+  # -- Number of replicas for Logsrv
+  replicas: 1
+
+  imageName: "logsrv"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Logsrv autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Logsrv
+    enabled: false
+    # -- Minimum autoscaling replicas for Logsrv
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Logsrv
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Logsrv
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Logsrv
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Logsrv
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Logsrv
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Logsrv service configuration
+  service:
+    # -- Port of the Logsrv service
+    port: 8443
+    # -- Port of the Logsrv Metrics service
+    metricsPort: 9090
+    # -- Type of the Logsrv service
+    type: ClusterIP
+    # -- Annotations for the Logsrv service
+    annotations: {}
+    # -- Labels for the Logsrv service
+    labels: {}
+
+  # Logsrv ingress configuration
+  ingress:
+    # -- Specify if the Logsrv Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Hydra ingress
+    annotations: {}
+    # -- hosts configuration for the Hydra ingress
+    hosts:
+      - host: logsrv.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Logsrv ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - logsrv.devzero.example.com
+
+polland:
+  # -- Number of replicas for Polland 
+  replicas: 1
+
+  imageName: "polland"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Polland autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Polland 
+    enabled: false
+    # -- Minimum autoscaling replicas for Polland 
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Polland 
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Polland 
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Polland 
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Polland 
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Polland 
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Polland service configuration
+  service:
+    # -- Port of the Polland service
+    port: 8443
+    # -- Port of the Polland Metrics service
+    metricsPort: 9090
+    # -- Type of the Polland service
+    type: ClusterIP
+    # -- Annotations for the Polland service
+    annotations: {}
+    # -- Labels for the Polland service
+    labels: {}
+
+  # Polland ingress configuration
+  ingress:
+    # -- Specify if the Polland Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Polland ingress
+    annotations: {}
+    # -- hosts configuration for the Polland ingress
+    hosts:
+      - host: polland.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Polland ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - polland.devzero.example.com
+
+logsrv:
+  # -- Number of replicas for Logsrv
+  replicas: 1
+
+  imageName: "logsrv"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Logsrv autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Logsrv
+    enabled: false
+    # -- Minimum autoscaling replicas for Logsrv
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Logsrv
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Logsrv
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Logsrv
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Logsrv
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Logsrv
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Logsrv service configuration
+  service:
+    # -- Port of the Logsrv service
+    port: 8443
+    # -- Port of the Logsrv Metrics service
+    metricsPort: 9090
+    # -- Type of the Logsrv service
+    type: ClusterIP
+    # -- Annotations for the Logsrv service
+    annotations: {}
+    # -- Labels for the Logsrv service
+    labels: {}
+
+  # Logsrv ingress configuration
+  ingress:
+    # -- Specify if the Logsrv Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Logsrv ingress
+    annotations: {}
+    # -- hosts configuration for the Logsrv ingress
+    hosts:
+      - host: logsrv.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Logsrv ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - logsrv.devzero.example.com
+
+pulse:
+  # -- Number of replicas for Pulse 
+  replicas: 1
+
+  imageName: "pulse"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Pulse autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Pulse 
+    enabled: false
+    # -- Minimum autoscaling replicas for Pulse 
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Pulse 
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Pulse 
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Pulse 
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Pulse 
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Pulse 
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Pulse service configuration
+  service:
+    # -- Port of the Pulse service
+    port: 8443
+    # -- Port of the Pulse Metrics service
+    metricsPort: 9090
+    # -- Type of the Pulse service
+    type: ClusterIP
+    # -- Annotations for the Pulse service
+    annotations: {}
+    # -- Labels for the Pulse service
+    labels: {}
+
+  # Pulse ingress configuration
+  ingress:
+    # -- Specify if the Pulse Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Pulse ingress
+    annotations: {}
+    # -- hosts configuration for the Pulse ingress
+    hosts:
+      - host: pulse.devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Pulse ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - pulse.devzero.example.com
+
+buildqd:
+  # -- Number of replicas for Buildqd 
+  replicas: 1
+
+  imageName: "pulse"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Buildqd autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Buildqd 
+    enabled: false
+    # -- Minimum autoscaling replicas for Buildqd 
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Buildqd 
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Buildqd 
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Buildqd 
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Buildqd 
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Buildqd 
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Buildqd service configuration
+  service:
+    # -- Port of the Buildqd service
+    port: 8443
+    # -- Port of the Buildqd Metrics service
+    metricsPort: 9090
+    # -- Type of the Buildqd service
+    type: ClusterIP
+    # -- Annotations for the Buildqd service
+    annotations: {}
+    # -- Labels for the Buildqd service
+    labels: {}
+
+web:
+  # -- Number of replicas for Web 
+  replicas: 1
+
+  imageName: "web"
+
+  # -- Optionally set the scheduler for pods
+  schedulerName: ""
+
+  # -- Optionally set the name of the PriorityClass for pods
+  priorityClassName: null
+
+  # -- NodeSelector to pin pods to certain set of nodes
+  nodeSelector: { }
+
+  # -- Pod affinity settings
+  affinity: { }
+
+  # -- Pod tolerations
+  tolerations: []
+
+  # -- Pod labels
+  podLabels: {}
+
+  # -- Pod annotations
+  podAnnotations: {}
+
+  # -- Annotations
+  annotations: {}
+
+  # Web autoscaling configuration
+  autoscaling:
+    # -- Enable autoscaling for Web 
+    enabled: false
+    # -- Minimum autoscaling replicas for Web 
+    minReplicas: 1
+    # -- Maximum autoscaling replicas for Web 
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for Web 
+    targetCPUUtilizationPercentage: 60
+    # -- Target memory utilisation percentage for Web 
+    targetMemoryUtilizationPercentage: 80
+
+  resources:
+    # -- Resource limits for Web 
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    # -- Resource requests for Web 
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Web service configuration
+  service:
+    # -- Port of the Web service
+    port: 8443
+    # -- Port of the Web Metrics service
+    metricsPort: 9090
+    # -- Type of the Web service
+    type: ClusterIP
+    # -- Annotations for the Web service
+    annotations: {}
+    # -- Labels for the Web service
+    labels: {}
+
+  # Web ingress configuration
+  ingress:
+    # -- Specify if the Web Ingress is enabled
+    enabled: false
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations for the Web ingress
+    annotations: {}
+    # -- hosts configuration for the Web ingress
+    hosts:
+      - host: devzero.example.com
+        paths:
+          - path: /
+            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
+            # pathType: Prefix
+    # -- TLS configuration for the Web ingress
+    tls:
+      - secretName: devzero-api-tls
+        hosts:
+          - devzero.example.com
