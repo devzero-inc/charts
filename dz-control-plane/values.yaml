@@ -623,7 +623,7 @@ buildqd:
   # -- Number of replicas for Buildqd 
   replicas: 1
 
-  imageName: "pulse"
+  imageName: "buildqd"
 
   # -- Optionally set the scheduler for pods
   schedulerName: ""
@@ -639,15 +639,6 @@ buildqd:
 
   # -- Pod tolerations
   tolerations: []
-
-  # -- Pod labels
-  podLabels: {}
-
-  # -- Pod annotations
-  podAnnotations: {}
-
-  # -- Annotations
-  annotations: {}
 
   # Buildqd autoscaling configuration
   autoscaling:
@@ -684,6 +675,43 @@ buildqd:
     annotations: {}
     # -- Labels for the Buildqd service
     labels: {}
+
+  buildkit:
+    image:
+      # Buildkit repository
+      repository: docker.io/moby/buildkit
+      # Buildkit image policy
+      pullPolicy: IfNotPresent
+      # Buildkit image tag
+      tag: "v0.15.1"
+
+    # Buildkit container security context
+    securityContext:
+      privileged: true
+
+    # Buildkit command
+    command: buildkitd
+
+    # Buildkit args
+    args:
+      - --addr
+      - unix:///run/buildkit/buildkitd.sock
+      - --addr
+      - tcp://0.0.0.0:1234
+  
+    resources:
+      # -- Resource limits for Buildqd 
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      # -- Resource requests for Buildqd 
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # Buildkit persistant volume size for shared cache
+    persistentVolumeClaim:
+      storageSize: 100Gi
 
 web:
   # -- Number of replicas for Web 
