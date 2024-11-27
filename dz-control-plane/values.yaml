@@ -359,6 +359,58 @@ logsrv:
           - logsrv.devzero.example.com
 
 polland:
+  worker:
+    # -- Number of replicas for Polland Worker
+    replicas: 3
+
+    # 1 hour of termination grace to allow stacks to finishing tasks
+    terminationGracePeriodSeconds: 3600
+
+    # Available queues created from worker
+    queues:
+      - name: fast
+        replicaCount: 3
+        autoscaling:
+          enabled: false 
+          minReplicas: 3
+          maxReplicas: 5
+      - name: build
+        replicaCount: 3
+        autoscaling:
+          enabled: false 
+          minReplicas: 3
+          maxReplicas: 5
+      - name: workload
+        replicaCount: 3
+        autoscaling:
+          enabled: false 
+          minReplicas: 3
+          maxReplicas: 5
+      - name: cluster
+        replicaCount: 3
+        autoscaling:
+          enabled: false 
+          minReplicas: 3
+          maxReplicas: 5
+      - name: hibernation
+        replicaCount: 1
+        autoscaling:
+          enabled: false
+          minReplicas: 1
+          maxReplicas: 1
+
+  beat:
+    # -- Number of replicas for Polland Beat
+    replicas: 1
+
+  flower:
+    # -- Number of replicas for Polland Flower
+    replicas: 1
+
+  celery-exporter:
+    # -- Number of replicas for Polland Celery Exporter
+    replicas: 1
+    
   # -- Number of replicas for Polland 
   replicas: 1
 
