@@ -65,7 +65,6 @@ spec:
           env:
             - name: ENVIRONMENT
               value: "self_hosted"
-      volumes:
-        - name: config
-          configMap:
-            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}

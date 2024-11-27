@@ -7,13 +7,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   self_hosted.yaml: |
-    service_port: 8884
+    service_port: {{ .Values.logsrv.service.port }}
     health_probe_port: 9999
     log_level: debug
     
     postgres_url: "" # from envvar
     pgpassword: "" # from envvar
-    queue_url: ""
+    queue_url: "" # form envvar
     num_consumers: 20
     
     self_hosted: false
@@ -22,10 +22,8 @@ data:
     - http://localhost:3000
     
     auth0_domains:
-    - devinfra.us.auth0.com
-    - auth.devzero.io
+    - auth.devzero.example
     auth0_audience:
-    - https://devinfra.io/webapi
-    - https://devinfra.us.auth0.com/api/v2/
+    - https://devzero.example/api
     refresh_jwks_timer: 3600
-    vaulted_auth_public_key: ""
+    vaulted_auth_public_key: {{ .Values.auth.public_key | quote }}

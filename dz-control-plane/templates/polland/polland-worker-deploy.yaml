@@ -41,15 +41,14 @@ spec:
           env:
             - name: QUEUE
               value: {{ $queue.name }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
           resources:
             {{- toYaml $root.Values.polland.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /app/polland/config/self_hosted.yaml
-      volumes:
-        - name: config
-          configMap:
-            name: {{ include "devzero.resourceName" (dict "ctx" $root "component" "polland") }}
       {{- with $root.Values.polland.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

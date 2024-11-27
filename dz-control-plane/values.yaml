@@ -440,6 +440,22 @@ polland:
   # -- Annotations
   annotations: {}
 
+  # -- Env configuration for polland configmap
+  env: 
+    MYSQL_PORT: "3306"
+    MYSQL_DATABASE: "polland"
+    MYSQL_USER: "polland"
+
+    USE_DOCKER: "yes"
+    # Disable connection pooling in preprod because we are running a small container and we don't want to keep connections open.
+    CONN_MAX_AGE: "0"
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SETTINGS_MODULE: "config.settings.production"
+    # This is supposed to be a secret, but since it is only used to encrypt sessions and we don't use sessions, it can be defined plaintext.
+    DJANGO_SECRET_KEY: "super_secret_key"
+    CELERY_FLOWER_USER: "devzero"
+    CELERY_FLOWER_PASSWORD: "devzero"
+
   # Polland autoscaling configuration
   autoscaling:
     # -- Enable autoscaling for Polland 
