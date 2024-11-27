@@ -407,7 +407,7 @@ polland:
     # -- Number of replicas for Polland Flower
     replicas: 1
 
-  celery-exporter:
+  celeryExporter:
     # -- Number of replicas for Polland Celery Exporter
     replicas: 1
     

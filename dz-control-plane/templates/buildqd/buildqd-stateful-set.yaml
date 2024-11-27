@@ -43,8 +43,8 @@ spec:
           image: "{{ .Values.buildqd.buildkit.image.repository }}:{{ .Values.buildqd.buildkit.image.tag }}"
           imagePullPolicy: {{ .Values.buildqd.buildkit.image.pullPolicy }}
           command:
-            - {{ .Values.buildkit.command }}
-          {{- with .Values.buildkit.args }}
+            - {{ .Values.buildqd.buildkit.command }}
+          {{- with .Values.buildqd.buildkit.args }}
           args:
             {{- toYaml . | nindent 10 }}
           {{- end }}

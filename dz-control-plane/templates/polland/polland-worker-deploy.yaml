@@ -36,14 +36,14 @@ spec:
           imagePullPolicy: {{ $root.Values.image.pullPolicy }}
           ports:
             - name: metrics-port 
-              containerPort: {{ .Values.polland.service.metricsPort }}
+              containerPort: {{ $root.Values.polland.service.metricsPort }}
               protocol: TCP
           env:
             - name: QUEUE
               value: {{ $queue.name }}
           envFrom:
             - configMapRef:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
+                name: polland
           resources:
             {{- toYaml $root.Values.polland.resources | nindent 12 }}
           volumeMounts:
