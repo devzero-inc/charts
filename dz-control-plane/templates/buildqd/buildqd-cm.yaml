@@ -199,4 +199,3 @@ data:
     #[system]
     # how often buildkit scans for changes in the supported emulated platforms
     #platformsCacheMaxAge = "1h"
-{{- end}}
