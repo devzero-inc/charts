@@ -29,7 +29,7 @@ auth:
   # -- Base64 encoded public key for JWT verification
   public_key: ""
 
-api_gateway:
+gateway:
   # -- Number of replicas for Api Gateway
   replicas: 3
 
@@ -870,6 +870,15 @@ web:
 
 #### External dependencies ####
 
+# Cluster issuer for cert manager
+issuer:
+  enabled: false
+
+  # ACME server URL
+  acme: https://acme-v02.api.letsencrypt.org/directory 
+  # Email address used for ACME registration
+  email: example@devzero.io
+
 # Vault external dependencies
 vault:
   global:
@@ -910,7 +919,7 @@ vault:
       extraPaths: [ ]
       tls:
         - hosts:
-            - host: vault.devzero.example
+            - vault.devzero.example
           secretName: vault-tls
     auditStorage:
       enabled: true

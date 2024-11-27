@@ -1,0 +1,22 @@
+{{- if .Values.issuer.enabled -}}
+{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    # The ACME server URL
+    server: {{ .Values.issuer.acme }}
+    # Email address used for ACME registration
+    emaiL: {{ .Values.issuer.email }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-production
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    - http01:
+        ingress:
+          class:  nginx
+{{- end }}
+{{- end }}

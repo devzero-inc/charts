@@ -1,25 +1,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
-    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
-    {{- with .Values.api_gateway.service.labels }}
+    {{- include "devzero.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+    {{- with .Values.gateway.service.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    {{- toYaml .Values.api_gateway.service.annotations | nindent 4 }}
+    {{- toYaml .Values.gateway.service.annotations | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  type: {{ .Values.api_gateway.service.type }}
+  type: {{ .Values.gateway.service.type }}
   ports:
-    - port: {{ .Values.api_gateway.service.port }}
+    - port: {{ .Values.gateway.service.port }}
       targetPort: http
       protocol: TCP
       name: http
-    - port: {{ .Values.api_gateway.service.metricsPort }}
+    - port: {{ .Values.gateway.service.metricsPort }}
       targetPort: metrics
       protocol: TCP
       name: metrics
   selector:
-    {{- include "devzero.selectorLabels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
+    {{- include "devzero.selectorLabels" (dict "ctx" . "component" "gateway") | nindent 4 }}

@@ -16,7 +16,8 @@ spec:
       maxSurge: 25%
       maxUnavailable: 0
   selector:
-     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "hydra") | nindent 4 }}
+    matchLabels:
+      {{- include "devzero.selectorLabels" (dict "ctx" . "component" "hydra") | nindent 6 }}
   template:
     metadata:
       labels:
@@ -51,7 +52,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
-          umage: "{{ .Values.image.repository }}/{{ .Values.hydra.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}/{{ .Values.hydra.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -94,4 +95,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            nameu {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
+            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}

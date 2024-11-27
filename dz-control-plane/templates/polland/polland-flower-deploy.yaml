@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}-flower
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "polland") | nindent 4 }}
   annotations:
@@ -16,7 +16,8 @@ spec:
       maxSurge: 25%
       maxUnavailable: 0
   selector:
-     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "polland") | nindent 4 }}
+    matchLabels:
+      {{- include "devzero.selectorLabels" (dict "ctx" . "component" "polland") | nindent 6 }}
   template:
     metadata:
       labels:
@@ -79,9 +80,6 @@ spec:
             timeoutSeconds: 1
           resources:
             {{ toYaml .Values.polland.resources | nindent 12 }}
-          volumeMounts:
-            - mountPath: /app/polland/config/self_hosted.yaml
-              name: config
           env:
             - name: ENVIRONMENT
               value: "self_hosted"
