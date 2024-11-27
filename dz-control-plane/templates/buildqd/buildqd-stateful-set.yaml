@@ -66,15 +66,15 @@ spec:
         - name: buildkit-config
           configMap:
             name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}-buildkit
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.buildqd.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.buildqd.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.buildqd.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
