@@ -9,8 +9,8 @@ data:
   self_hosted.yaml: |
     server_url: https://hydra.devzero.dev
     
-    listen_addr: 0.0.0.0:8443
-    metrics_listen_addr: 0.0.0.0:9090
+    listen_addr: 0.0.0.0:{{ .Values.hydra.service.port }}
+    metrics_listen_addr: 0.0.0.0:{{ .Values.hydra.service.metricsPort }}
     grpc_listen_addr: 127.0.0.1:50443
     grpc_allow_insecure: false
     
@@ -65,16 +65,16 @@ data:
     #oidc:
     #  only_start_if_oidc_is_available: true
     #  issuer: "https://devinfra.us.auth0.com/"
-    #  client_id: "kMRz7j6xY3LtBioPDpns14TBCwr2EVX7"
+    #  client_id: ""
     #  strip_email_domain: true
     #  allowed_domains:
-    #    - devzero.dev
+    #    - devzero.example
     
     logtail:
       enabled: false
     
     randomize_client_port: false
     
-    otel_host: datadog.datadog.svc.cluster.local
+    otel_host: ""
     otel_port: 4317
-    environment: "preproduction"
+    environment: "self-hosted"

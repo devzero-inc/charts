@@ -8,18 +8,16 @@ metadata:
 data:
   self_hosted.yaml: |
     use_sentry: false
-    redis_address: localhost:6379
-    metrics_address: 0.0.0.0:9090
-    polland_address: http://polland:8000
+    redis_address: "" # from env variable
+    metrics_address: 0.0.0.0:{{ .Values.buildqd.service.metricsPort }}
+    polland_address: http://polland:{{ .Values.polland.service.port }}
     buildkit_address: localhost:1234 
-    backend_address: http://backend:8444/internal/
-    logsrv_default_queue: "https://sqs.us-west-2.amazonaws.com/710984755704/logsrv.fifo"
-    logsrv_default_region: "us-west-2"
+    backend_address: http://backend:{{ .Values.polland.service.port }}/internal/
+    logsrv_default_queue: "" # from env variable
+    logsrv_default_region: "" # from env variable
     max_workers: 1
     sentry_debug: false
-    sentry_dsn:
     max_task_attempts: 1
-    self_hosted: false
     log:
       filepath:
         - stderr

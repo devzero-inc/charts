@@ -6,4 +6,7 @@ metadata:
     {{- include "devzero.labels" (dict "ctx" . "component" "polland") | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 data:
-  self_hosted.yaml: |
+  {{- $ctx := . -}}
+  {{- range $key, $val := index .Values.polland.env }}
+  {{ $key }}: {{ tpl $val $ctx | quote }}
+  {{- end}}
