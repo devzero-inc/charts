@@ -1,22 +1,22 @@
-{{- if .Values.api_gateway.ingress.enabled -}}
-apiVersion: networking.k8s.io/v1
+{{- if .Values.gateway.ingress.enabled -}}
+upiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "api_gateway") }}
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
-    {{- include "devzero.labels" (dict "ctx" . "component" "api_gateway") | nindent 4 }}
-  {{- with .Values.api_gateway.ingress.annotations }}
+    {{- include "devzero.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
+  {{- with .Values.gateway.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  {{- if .Values.api_gateway.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.api_gateway.ingress.ingressClassName }}
+  {{- if .Values.gateway.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.gateway.ingress.ingressClassName }}
   {{- end -}}
-  {{- if .Values.api_gateway.ingress.tls }}
+  {{- if .Values.gateway.ingress.tls }}
   tls:
-    {{- range .Values.api_gateway.ingress.tls }}
+    {{- range .Values.gateway.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -27,7 +27,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.api_gateway.ingress.hosts }}
+    {{- range .Values.gateway.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -36,9 +36,9 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "api_gateway") }}
+                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "gateway") }}
                 port:
-                  number: {{ $.Values.api_gateway.service.port }}
+                  number: {{ $.Values.gateway.service.port }}
           {{- end }}
     {{- end }}
 {{- end }}

@@ -16,7 +16,8 @@ spec:
       maxSurge: 25%
       maxUnavailable: 0
   selector:
-     {{- include "devzero.selectorLabels" (dict "ctx" . "component" "pulse") | nindent 4 }}
+    matchLabels:
+      {{- include "devzero.selectorLabels" (dict "ctx" . "component" "pulse") | nindent 6 }}
   template:
     metadata:
       labels:
