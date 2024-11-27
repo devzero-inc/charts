@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   serviceName: "buildqd"
-  replicas: {{ .Values.buildqd.replicaCount }}
+  replicas: {{ .Values.buildqd.replicas }}
   selector:
     matchLabels:
       {{- include "devzero.selectorLabels" (dict "ctx" . "component" "buildqd") | nindent 6 }}
@@ -38,8 +38,16 @@ spec:
             - name: buildkit-state
               mountPath: /var/lib/buildkit
         - name: buildkitd
+          securityContext:
+            {{- toYaml .Values.buildqd.buildkit.securityContext | nindent 12 }}
           image: "{{ .Values.buildqd.buildkit.image.repository }}:{{ .Values.buildqd.buildkit.image.tag }}"
           imagePullPolicy: {{ .Values.buildqd.buildkit.image.pullPolicy }}
+          command:
+            - {{ .Values.buildkit.command }}
+          {{- with .Values.buildkit.args }}
+          args:
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
           ports:
             - name: buildkit
               containerPort: 1234
@@ -58,5 +66,26 @@ spec:
         - name: buildkit-config
           configMap:
             name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}-buildkit
-        - name: buildkit-state
-          emptyDir: {} # Replace with PersistentVolumeClaim if needed
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: buildkit-state
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.buildqd.buildkit.persistentVolumeClaim.storageSize }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Retain
