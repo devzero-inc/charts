@@ -1,0 +1,65 @@
+{{- $root := . -}}
+{{- range $queue := $root.Values.polland.worker.queues }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" $root "component" "polland") }}-worker-{{ $queue.name }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" $root "component" "polland") | nindent 4 }}
+    app.kubernetes.io/name: polland-worker-{{ $queue.name }}
+  namespace: {{ $root.Release.Namespace | quote }}
+spec:
+  replicas: {{ $queue.replicaCount }}
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "devzero.selectorLabels" (dict "ctx" $root "component" "polland") | nindent 6 }}
+      app.kubernetes.io/name: polland-worker-{{ $queue.name }}
+  template:
+    metadata:
+      labels:
+        {{- include "devzero.selectorLabels" (dict "ctx" $root "component" "polland") | nindent 8 }}
+        app.kubernetes.io/name: polland-worker-{{ $queue.name }}
+      annotations:
+        {{- include "devzero.podAnnotations" (dict "ctx" $root "component" "polland") | nindent 8 }}
+    spec:
+      serviceAccountName: {{ template "devzero.serviceAccountName" $root }}
+      terminationGracePeriodSeconds: {{ $root.Values.polland.worker.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ printf "%s-worker-%s" $root.Chart.Name $queue.name }}
+          image: "{{ $root.Values.image.repository }}/{{ $root.Values.polland.imageName }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
+          imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+          ports:
+            - name: metrics-port 
+              containerPort: {{ .Values.polland.service.metricsPort }}
+              protocol: TCP
+          env:
+            - name: QUEUE
+              value: {{ $queue.name }}
+          resources:
+            {{- toYaml $root.Values.polland.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/polland/config/self_hosted.yaml
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "devzero.resourceName" (dict "ctx" $root "component" "polland") }}
+      {{- with $root.Values.polland.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.polland.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $root.Values.polland.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

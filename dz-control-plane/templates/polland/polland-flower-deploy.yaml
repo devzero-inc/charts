@@ -8,7 +8,7 @@ metadata:
     {{- toYaml .Values.polland.annotations | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: {{ .Values.polland.replicas }}
+  replicas: {{ .Values.polland.flower.replicas }}
   revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
@@ -57,13 +57,10 @@ spec:
             - name: http
               containerPort: {{ .Values.polland.service.port }}
               protocol: TCP
-            - name: metrics-port
-              containerPort: {{ .Values.polland.service.metricsPort }}
-              protocol: TCP
           livenessProbe:
             failureThreshold: 3
             httpGet:
-              path: /
+              path: /healthcheck
               port: http 
               scheme: HTTP
             initialDelaySeconds: 5
@@ -73,7 +70,7 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /
+              path: /healthcheck
               port: http 
               scheme: HTTP
             initialDelaySeconds: 5
