@@ -28,7 +28,6 @@ spec:
       {{- with .Values.hydra.schedulerName }}
       schedulerName: {{ . | quote }}
       {{- end }}
-      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
       {{- if .Values.hydra.priorityClassName }}
       priorityClassName: {{ .Values.hydra.priorityClassName }}
       {{- end }}
