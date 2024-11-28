@@ -28,7 +28,6 @@ spec:
       {{- with .Values.pulse.schedulerName }}
       schedulerName: {{ . | quote }}
       {{- end }}
-      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
       {{- if .Values.pulse.priorityClassName }}
       priorityClassName: {{ .Values.pulse.priorityClassName }}
       {{- end }}
