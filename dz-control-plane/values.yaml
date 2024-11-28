@@ -27,7 +27,9 @@ serviceAccount:
 
 auth:
   # -- Base64 encoded public key for JWT verification
-  public_key: ""
+  publicKey: ""
+  # -- Base64 encoded private key for JWT verification
+  privateKey: ""
 
 gateway:
   # -- Number of replicas for Api Gateway
@@ -147,6 +149,72 @@ backend:
   # -- Annotations
   annotations: {}
 
+  redis:
+    url: redis://redis:6379
+    password: ""
+
+  mongo:
+    url: mongodb://mongo:27017
+
+  hydra:
+    url: https://hydra.selfzero.net
+    apiKey: 
+
+  control:
+    url: https://api.selfzero.net
+
+  logsrv:
+    queue: http://elasticmq:9324/queue/logsrv.fifo
+    region: "elasticmq"
+
+  github:
+    appId: ""
+    appPrivateKey: ""
+
+  stripe:
+    apiKey: ""
+    webhookSecret: ""
+    autoCreateSubscriptions: false
+
+  mimir:
+    url: http://mimir:8080/prometheus
+
+  hibernation:
+    enabled: false
+
+  cli:
+    urlTemplate: https://selfzero.net/dashboard/settings/user-settings?cli-session-id=%s
+
+  grafana:
+    enabled: false
+    url: grafana.selfzero.net
+    datasourceId: 
+    doraDatasourceId:
+    odaDatasourceId:
+    password:
+
+  storage:
+    allowedTeam: team-example-id
+    ceph:
+      clusterId: ""
+      filesystemName: cephfs
+      filesystemPath: cephfs
+      monitorAddress: /volumes/cache
+      userCredentials: ""
+      username: vuser
+
+  mainTeamId: ""
+
+  licenseKey: "***REMOVED***"
+
+  arch: amd64
+
+  registry:
+    url: http://artifactory
+
+  cortex:
+    key: ""
+
   # Backend autoscaling configuration
   autoscaling:
     # -- Enable autoscaling for Backend
@@ -214,6 +282,33 @@ hydra:
   # -- Annotations
   annotations: {}
 
+  postgres:
+    host: "dz-postgres-hydra"
+    port: 5432
+    name: "hydra"
+    user: "hydra"
+    password: "hydra"
+
+  redis:
+    url: redis://default:@hydra-redis:6379/0
+
+  cidr:
+    v6: fd7a:115c:a1e0::/48
+    v4: 100.64.0.0/10
+
+  derp:
+    server:
+      enabled: false
+      regionId: 999
+      regionCode: "headscale"
+      regionName: "Headscale Embedded DERP"
+      stunListenAddr: "0.0.0.0:3478"
+    urls:
+      - "https://controlplane.tailscale.com/derpmap/default"
+    paths: []
+    autoUpdateEnabled: true
+    updateFrequency: "24h"
+
   # Hydra autoscaling configuration
   autoscaling:
     # -- Enable autoscaling for Hydra
@@ -260,16 +355,16 @@ hydra:
     annotations: {}
     # -- hosts configuration for the Hydra ingress
     hosts:
-      - host: hydra.devzero.example.com
+      - host: hydra.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the Hydra ingress
     tls:
-      - secretName: devzero-api-tls
+      - secretName: devzero-hydra-tls
         hosts:
-          - hydra.devzero.example.com
+          - hydra.selfzero.net
 
 logsrv:
   # -- Number of replicas for Logsrv
@@ -300,6 +395,24 @@ logsrv:
 
   # -- Annotations
   annotations: {}
+
+  queue:
+    url: http://elasticmq:9324/queue/logsrv.fifo
+
+  postgres:
+    url: postgresql://logsrv@dz-postgres-logsrv:5432/logsrv
+    password: logsrv
+
+  allowedCorsOrigins:
+    - "http://localhost:3000"
+  
+  auth0:
+    domains:
+      - "auth.devzero.example"
+    audience:
+      - "https://devzero.example/api"
+  
+  refreshJwksTimer: 3600
 
   # Logsrv autoscaling configuration
   autoscaling:
@@ -347,16 +460,16 @@ logsrv:
     annotations: {}
     # -- hosts configuration for the Hydra ingress
     hosts:
-      - host: logsrv.devzero.example.com
+      - host: logsrv.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the Logsrv ingress
     tls:
-      - secretName: devzero-api-tls
+      - secretName: devzero-logsrv-tls
         hosts:
-          - logsrv.devzero.example.com
+          - logsrv.selfzero.net
 
 polland:
   worker:
@@ -445,6 +558,9 @@ polland:
     MYSQL_PORT: "3306"
     MYSQL_DATABASE: "polland"
     MYSQL_USER: "polland"
+    MYSQL_PASSWORD: "polland"
+    MYSQL_HOST: "dz-mysql-polland"
+    MYSQL_ROOT_PASSWORD: "polland"
 
     USE_DOCKER: "yes"
     # Disable connection pooling in preprod because we are running a small container and we don't want to keep connections open.
@@ -502,103 +618,16 @@ polland:
     annotations: {}
     # -- hosts configuration for the Polland ingress
     hosts:
-      - host: polland.devzero.example.com
+      - host: polland.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the Polland ingress
     tls:
-      - secretName: devzero-api-tls
+      - secretName: devzero-polland-tls
         hosts:
-          - polland.devzero.example.com
-
-logsrv:
-  # -- Number of replicas for Logsrv
-  replicas: 1
-
-  imageName: "logsrv"
-
-  # -- Optionally set the scheduler for pods
-  schedulerName: ""
-
-  # -- Optionally set the name of the PriorityClass for pods
-  priorityClassName: null
-
-  # -- NodeSelector to pin pods to certain set of nodes
-  nodeSelector: { }
-
-  # -- Pod affinity settings
-  affinity: { }
-
-  # -- Pod tolerations
-  tolerations: []
-
-  # -- Pod labels
-  podLabels: {}
-
-  # -- Pod annotations
-  podAnnotations: {}
-
-  # -- Annotations
-  annotations: {}
-
-  # Logsrv autoscaling configuration
-  autoscaling:
-    # -- Enable autoscaling for Logsrv
-    enabled: false
-    # -- Minimum autoscaling replicas for Logsrv
-    minReplicas: 1
-    # -- Maximum autoscaling replicas for Logsrv
-    maxReplicas: 3
-    # -- Target CPU utilisation percentage for Logsrv
-    targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for Logsrv
-    targetMemoryUtilizationPercentage: 80
-
-  resources:
-    # -- Resource limits for Logsrv
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    # -- Resource requests for Logsrv
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
-  # Logsrv service configuration
-  service:
-    # -- Port of the Logsrv service
-    port: 8443
-    # -- Port of the Logsrv Metrics service
-    metricsPort: 9090
-    # -- Type of the Logsrv service
-    type: ClusterIP
-    # -- Annotations for the Logsrv service
-    annotations: {}
-    # -- Labels for the Logsrv service
-    labels: {}
-
-  # Logsrv ingress configuration
-  ingress:
-    # -- Specify if the Logsrv Ingress is enabled
-    enabled: false
-    # -- Ingress Class Name. May be required for k8s >= 1.18
-    ingressClassName: "nginx"
-    # -- Annotations for the Logsrv ingress
-    annotations: {}
-    # -- hosts configuration for the Logsrv ingress
-    hosts:
-      - host: logsrv.devzero.example.com
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
-    # -- TLS configuration for the Logsrv ingress
-    tls:
-      - secretName: devzero-api-tls
-        hosts:
-          - logsrv.devzero.example.com
+          - polland.selfzero.net
 
 pulse:
   # -- Number of replicas for Pulse 
@@ -629,6 +658,27 @@ pulse:
 
   # -- Annotations
   annotations: {}
+
+  postgres:
+    password: pulse
+    user: pulse
+    host: dz-postgres-pulse
+    port: 5432
+    database: pulse
+    ssl: disable
+
+  mysql:
+    user: pulse
+    password: pulse
+    host: dz-mysql-pulse
+    port: 3306
+    database: pulse
+
+  devlake:
+    secret: "***REMOVED***"
+
+  openApi:
+    token: ""
 
   # Pulse autoscaling configuration
   autoscaling:
@@ -676,16 +726,16 @@ pulse:
     annotations: {}
     # -- hosts configuration for the Pulse ingress
     hosts:
-      - host: pulse.devzero.example.com
+      - host: pulse.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the Pulse ingress
     tls:
-      - secretName: devzero-api-tls
+      - secretName: devzero-pulse-tls
         hosts:
-          - pulse.devzero.example.com
+          - pulse.selfzero.net
 
 buildqd:
   # -- Number of replicas for Buildqd 
@@ -707,6 +757,13 @@ buildqd:
 
   # -- Pod tolerations
   tolerations: []
+
+  logsrv:
+    queue: http://elasticmq:9324/queue/logsrv.fifo
+    region: elasticmq
+
+  redis:
+    url:
 
   # Buildqd autoscaling configuration
   autoscaling:
@@ -857,27 +914,27 @@ web:
     annotations: {}
     # -- hosts configuration for the Web ingress
     hosts:
-      - host: devzero.example.com
+      - host: selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
             # pathType: Prefix
     # -- TLS configuration for the Web ingress
     tls:
-      - secretName: devzero-api-tls
+      - secretName: devzero-web-tls
         hosts:
-          - devzero.example.com
+          - selfzero.net
 
 #### External dependencies ####
 
 # Cluster issuer for cert manager
 issuer:
-  enabled: false
+  enabled: true
 
   # ACME server URL
   acme: https://acme-v02.api.letsencrypt.org/directory 
   # Email address used for ACME registration
-  email: example@devzero.io
+  email: example@selfzero.net
 
 # Vault external dependencies
 vault:
@@ -898,7 +955,7 @@ vault:
       enabled: true
       labels: { }
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   
       # Optionally use ingressClassName instead of deprecated annotation.
@@ -913,14 +970,14 @@ vault:
       # configure the ingress to point to the Vault active service.
       activeService: true
       hosts:
-        - host: vault.devzero.example
+        - host: vault.selfzero.net
           paths: [ ]
       ## Extra paths to prepend to the host configuration. This is useful when working with annotation based services.
       extraPaths: [ ]
       tls:
         - hosts:
-            - vault.devzero.example
-          secretName: vault-tls
+            - vault.selfzero.net
+          secretName: devzero-vault-tls
     auditStorage:
       enabled: true
     dataStorage:
@@ -969,8 +1026,8 @@ postgres:
     
     auth:
       database: "logsrv"
-      username: "devzero"
-      password: ""
+      username: "logsrv"
+      password: "logsrv"
     
     architecture: "standalone"
 
@@ -985,7 +1042,7 @@ postgres:
     auth:
       database: "hydra"
       username: "hydra"
-      password: ""
+      password: "hydra"
 
     architecture: "standalone"
 
@@ -997,17 +1054,17 @@ mysql:
     auth:
       username: "polland"
       database: "polland"
-      password: ""
+      password: "polland"
 
   pulse:
       username: "pulse"
       database: "pulse"
-      password: ""
+      password: "pulse"
 
   vault:
       username: "vault"
       database: "vault"
-      password: ""
+      password: "vault"
 
 # MongoDB external dependencies
 mongodb:
@@ -1089,9 +1146,9 @@ timescaledb-single:
   replicaCount: 1
   secrets:
     credentials:
-      PATRONI_SUPERUSER_PASSWORD: ""
-      PATRONI_REPLICATION_PASSWORD: ""
-      PATRONI_admin_PASSWORD: ""
+      PATRONI_SUPERUSER_PASSWORD: "pulse"
+      PATRONI_REPLICATION_PASSWORD: "pulse"
+      PATRONI_admin_PASSWORD: "pulse"
 
 # Elasticmq external dependencies
 elasticmq:

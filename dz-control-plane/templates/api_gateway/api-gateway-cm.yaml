@@ -15,5 +15,5 @@ data:
     log:
       filepath:
         - stdout
-    vaulted_auth_public_key: {{ .Values.auth.public_key | quote }}
+    vaulted_auth_public_key: {{ .Values.auth.publicKey | quote }}
     backend_url: "http://backend:{{ .Values.backend.service.port }}"

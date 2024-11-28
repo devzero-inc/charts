@@ -10,24 +10,24 @@ data:
     prometheus_port: {{ .Values.backend.service.metricsPort }}
     healthcheck_port: 8080
     listener_endpoint: "0.0.0.0:{{ .Values.backend.service.port }}"
-    redis_url: "" # from env variable
-    mongodb_url: "" # from env variable
+    redis_url: {{ .Values.backend.redis.url }}
+    mongodb_url: {{ .Values.backend.redis.url }}
     pulse_host: http://pulse
     pulse_port: {{ .Values.pulse.service.port }}
     log:
       filepath:
         - stdout
       level: debug
-    sendgrid_api_key: "" # managed in vault
-    auth0_client_id: lcfHtSd24HeO3Wo7Jcm3MzhdpLnHo2nR
-    auth0_api_client_id: "" # managed in vault
-    auth0_api_client_secret: "" # managed in vault
+    sendgrid_api_key: "" 
+    auth0_client_id: ""
+    auth0_api_client_id: "" 
+    auth0_api_client_secret: "" 
     polland_url: "http://polland:{{ .Values.polland.service.port }}"
     default_cli_version: latest
     default_cli_install_dir: /usr/local/bin
-    hydra_url: https://hydra.devzero.dev/
-    control_plane_url: https://api.devzero.dev
-    hydra_api_key: "" # managed in vault
+    hydra_url: {{ .Values.backend.hydra.url }}
+    control_plane_url: {{ .Values.backend.control.url }}
+    hydra_api_key: {{ .Values.backend.hydra.apiKey }}
     download_cli_script_url: "https://get.devzero.io"
     default_subnet_selector:
       ap-south-1: subnet-0fec74fdb733b93f7
@@ -38,39 +38,38 @@ data:
     posthog:
       fake: true
     shared_storage:
-      allowed_team: "team-5660bca9e0b6467ab5972a53b4384055"
-      ceph_cluster_id: "7c606d50-3c69-4ecf-940b-ca87e41adfad"
-      ceph_filesystem_name: "cephfs"
-      ceph_filesystem_path: "/volumes/cache"
-      ceph_monitor_address: "v2:10.3.2.17:3300/0 v2:10.3.0.21:3300/0 v2:10.3.1.88:3300/0"
-      ceph_user_credentials: "" # managed in vault
-      ceph_username: "vuser"
-    environment: preproduction
+      allowed_team: {{ .Values.backend.storage.allowedTeam }}
+      ceph_cluster_id: {{ .Values.backend.storage.ceph.clusterId }}
+      ceph_filesystem_name: {{ .Values.backend.storage.ceph.filesystemName }}
+      ceph_filesystem_path: {{ .Values.backend.storage.ceph.filesystemPath }}
+      ceph_monitor_address: {{ .Values.backend.storage.ceph.monitorAddress }}
+      ceph_user_credentials: {{ .Values.backend.storage.ceph.userCredentials }}
+      ceph_username: {{ .Values.backend.storage.ceph.username }}
+    environment: self-hosted 
     default_dz_base_image_tag: base-latest 
-    devzero_team_id: team-82122a716f0147ffb274d8f2bf8b56b3
-    logsrv_default_queue: "https://sqs.us-west-2.amazonaws.com/710984755704/logsrv.fifo"
-    logsrv_default_region: "us-west-2"
-    github_app_id: 1046354
-    github_app_private_key: "" # managed in vault
+    devzero_team_id: {{ .Values.backend.mainTeamId }}
+    logsrv_default_queue: {{ .Values.backend.logsrv.queue }}
+    logsrv_default_region: {{ .Values.backend.logsrv.region }}
+    github_app_id: {{ .Values.backend.github.appId }}
+    github_app_private_key: {{ .Values.backend.github.appPrivateKey }}
     stripe:
-      api_key: ""
-      webhook_signing_secret: ""
-      auto_create_subscriptions: "true"
+      api_key: {{ .Values.backend.stripe.apiKey }}
+      webhook_signing_secret: {{ .Values.backend.stripe.webhookSecret }}
+      auto_create_subscriptions: {{ .Values.backend.stripe.autoCreateSubscriptions }}
     grafana:
-      enabled: true
-      url: grafana.devzero.dev
-      datasource_id: d1a458fc-7ae0-46eb-95f8-16a6d65f7742
-      dora_datasource_id: c8bd8fa1-2a68-4ad3-9640-f04609266227
-      oda_datasource_id: c5820276-9265-437b-9072-236a93ddbe56
-      password: "" # managed in vault
+      enabled: {{ .Values.backend.grafana.enabled }}
+      url: {{ .Values.backend.grafana.url }}
+      datasource_id: {{ .Values.backend.grafana.datasourceId }}
+      dora_datasource_id: {{ .Values.backend.grafana.doraDatasourceId }}
+      oda_datasource_id: {{ .Values.backend.grafana.odaDatasourceId }}
+      password: {{ .Values.backend.grafana.password }}
     self_hosted: false
-    jwt_private_key: ""
-    license_key: ""
-    arch: "amd64"
-    docker_registry: ""
+    license_key: {{ .Values.backend.licenseKey }}
+    arch: {{ .Values.backend.arch }}
+    docker_registry: {{ .Values.backend.registry.url }}
     service_keys:
-      cortex: "" # managed in vault
-    vaulted_auth_private_key: "" # managed in vault
-    cli_session_url_template: "https://devzero.dev/dashboard/settings/user-settings?cli-session-id=%s"
-    auto_hibernation_enabled: true
-    cost_prometheus_url: "http://mimir-nginx.kube-prometheus-stack.svc:80/prometheus"
+      cortex: {{ .Values.backend.cortex.key }}
+    vaulted_auth_private_key: {{ .Values.auth.privateKey | quote }}
+    cli_session_url_template: {{ .Values.backend.cli.urlTemplate }}
+    auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
+    cost_prometheus_url: {{ .Values.backend.mimir.url }}
