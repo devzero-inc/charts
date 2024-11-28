@@ -28,7 +28,6 @@ spec:
       {{- with .Values.polland.schedulerName }}
       schedulerName: {{ . | quote }}
       {{- end }}
-      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
       {{- if .Values.polland.priorityClassName }}
       priorityClassName: {{ .Values.polland.priorityClassName }}
       {{- end }}

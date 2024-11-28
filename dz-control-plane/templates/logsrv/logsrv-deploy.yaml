@@ -28,7 +28,6 @@ spec:
       {{- with .Values.logsrv.schedulerName }}
       schedulerName: {{ . | quote }}
       {{- end }}
-      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
       {{- if .Values.logsrv.priorityClassName }}
       priorityClassName: {{ .Values.logsrv.priorityClassName }}
       {{- end }}
