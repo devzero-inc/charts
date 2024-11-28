@@ -11,19 +11,23 @@ data:
     health_probe_port: 9999
     log_level: debug
     
-    postgres_url: "" # from envvar
-    pgpassword: "" # from envvar
-    queue_url: "" # form envvar
+    postgres_url: {{ .Values.logsrv.postgres.url }}
+    pgpassword: {{ .Values.logsrv.postgres.password }}
+    queue_url: {{ .Values.logsrv.queue.url }}
     num_consumers: 20
     
     self_hosted: false
     
     allowed_cors_origins:
-    - http://localhost:3000
-    
+    {{- range .Values.logsrv.allowedCorsOrigins }}
+      - {{ . | quote }}
+    {{- end }}
     auth0_domains:
-    - auth.devzero.example
+    {{- range .Values.logsrv.auth0.domains }}
+      - {{ . | quote }}
+    {{- end }}
     auth0_audience:
-    - https://devzero.example/api
-    refresh_jwks_timer: 3600
-    vaulted_auth_public_key: {{ .Values.auth.public_key | quote }}
+    {{- range .Values.logsrv.auth0.audience }}
+      - {{ . | quote }}
+    {{- end }}
+    refresh_jwks_timer: {{ .Values.logsrv.refreshJwksTimer }}
