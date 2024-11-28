@@ -8,13 +8,13 @@ metadata:
 data:
   self_hosted.yaml: |
     use_sentry: false
-    redis_address: "" # from env variable
+    redis_address: {{ .Values.backend.redis.url }}
     metrics_address: 0.0.0.0:{{ .Values.buildqd.service.metricsPort }}
     polland_address: http://polland:{{ .Values.polland.service.port }}
     buildkit_address: localhost:1234 
     backend_address: http://backend:{{ .Values.polland.service.port }}/internal/
-    logsrv_default_queue: "" # from env variable
-    logsrv_default_region: "" # from env variable
+    logsrv_default_queue: {{ .Values.buildqd.logsrv.queue }}
+    logsrv_default_region: {{ .Values.buildqd.logsrv.region }}
     max_workers: 1
     sentry_debug: false
     max_task_attempts: 1
