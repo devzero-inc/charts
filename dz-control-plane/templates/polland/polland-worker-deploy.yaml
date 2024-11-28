@@ -28,7 +28,6 @@ spec:
       annotations:
         {{- include "devzero.podAnnotations" (dict "ctx" $root "component" "polland") | nindent 8 }}
     spec:
-      serviceAccountName: {{ template "devzero.serviceAccountName" $root }}
       terminationGracePeriodSeconds: {{ $root.Values.polland.worker.terminationGracePeriodSeconds }}
       containers:
         - name: {{ printf "%s-worker-%s" $root.Chart.Name $queue.name }}

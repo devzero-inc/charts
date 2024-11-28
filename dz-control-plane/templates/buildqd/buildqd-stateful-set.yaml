@@ -18,7 +18,6 @@ spec:
       annotations:
         {{- include "devzero.podAnnotations" (dict "ctx" . "component" "buildqd") | nindent 8 }}
     spec:
-      serviceAccountName: {{ template "devzero.serviceAccountName" . }}
       containers:
         - name: buildqd
           image: "{{ .Values.image.repository }}/{{ .Values.buildqd.imageName }}:{{ .Values.image.tag }}"
