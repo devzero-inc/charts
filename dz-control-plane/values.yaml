@@ -6,13 +6,14 @@ fullnameOverride: null
 
 image:
   # -- Devzero container image repository'
-  repository: 056855531191.dkr.ecr.us-west-2.amazonaws.com
+  repository: images.devzero.io/proxy/devzero-control-plane/056855531191.dkr.ecr.us-west-2.amazonaws.com
   # -- Devzero container image tag'
-  tag: "v0.0.0"
+  tag: "latest"
   # -- Container pull policy
   pullPolicy: IfNotPresent
   # -- Optionally specify an array of imagePullSecrets
-  pullSecrets: []
+  pullSecrets:
+    - replicated-pull-secret
 
 global:
   podAnnotations: {}
