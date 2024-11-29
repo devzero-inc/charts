@@ -45,12 +45,18 @@ spec:
               value: {{ $queue.name }}
           envFrom:
             - configMapRef:
-                name: polland
+                name: {{ include "devzero.resourceName" (dict "ctx" $root "component" "polland") }}
           resources:
             {{- toYaml $root.Values.polland.resources | nindent 12 }}
       {{- with $root.Values.polland.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $root.Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range $root.Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
       {{- end }}
       {{- with $root.Values.polland.affinity }}
       affinity:
