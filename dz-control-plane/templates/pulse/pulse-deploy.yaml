@@ -63,33 +63,14 @@ spec:
             - containerPort: 8081
               name: health
               protocol: TCP
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: health
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /ready
-              port: health
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
           resources:
             {{ toYaml .Values.pulse.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /app/api-gateway/config/self_hosted.yaml
+            - mountPath: /root/config/self_hosted.yaml
               name: config
+              subPath: self_hosted.yaml
           env:
-            - name: ENVIRONMENT
+            - name: CONFIG_FILENAME
               value: "self_hosted"
       volumes:
         - name: config

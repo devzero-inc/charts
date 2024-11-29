@@ -37,6 +37,9 @@ spec:
               subPath: self_hosted.yaml
             - name: buildkit-state
               mountPath: /var/lib/buildkit
+          env:
+            - name: CONFIG_FILENAME
+              value: "self_hosted"
         - name: buildkitd
           securityContext:
             {{- toYaml .Values.buildqd.buildkit.securityContext | nindent 12 }}
@@ -78,6 +81,12 @@ spec:
       {{- with .Values.buildqd.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
       {{- end }}
   volumeClaimTemplates:
     - metadata:
