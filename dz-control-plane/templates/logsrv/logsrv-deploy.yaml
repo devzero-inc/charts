@@ -60,7 +60,7 @@ spec:
             - name: metrics-port
               containerPort: {{ .Values.logsrv.service.metricsPort }}
               protocol: TCP
-            - containerPort: 8081
+            - containerPort: 9999
               name: health
               protocol: TCP
           livenessProbe:

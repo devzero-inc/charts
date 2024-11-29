@@ -8,7 +8,7 @@ metadata:
 data:
   self_hosted.yaml: |
     use_sentry: false
-    redis_address: {{ .Values.backend.redis.url }}
+    redis_address: {{ .Values.buildqd.redis.url }}
     metrics_address: 0.0.0.0:{{ .Values.buildqd.service.metricsPort }}
     polland_address: http://polland:{{ .Values.polland.service.port }}
     buildkit_address: localhost:1234 
@@ -26,7 +26,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}-buildqd
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "buildqd") }}-buildkit
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "buildqd") | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}

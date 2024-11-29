@@ -38,6 +38,11 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: mongodb.enabled
   - name: redis
+    alias: redis-buildqd
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
     alias: redis-backend
     version: 20.2.1
     repository: https://charts.bitnami.com/bitnami
