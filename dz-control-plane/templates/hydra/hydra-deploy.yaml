@@ -52,6 +52,9 @@ spec:
       containers:
         - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
           image: "{{ .Values.image.repository }}/{{ .Values.hydra.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - /headscale
+            - serve
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -63,26 +66,6 @@ spec:
             - containerPort: 8081
               name: health
               protocol: TCP
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: health
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /ready
-              port: health
-              scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
           resources:
             {{ toYaml .Values.hydra.resources | nindent 12 }}
           volumeMounts:
