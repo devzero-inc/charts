@@ -289,9 +289,9 @@ hydra:
   serverUrl: https://hydra.selfzero.net
 
   postgres:
-    host: "dz-postgres-hydra"
+    host: "dz-control-plane-postgres-hydra"
     port: 5432
-    name: "hydra"
+    name: "postgres"
     user: "hydra"
     password: "hydra"
 
@@ -302,6 +302,9 @@ hydra:
     v6: fd7a:115c:a1e0::/48
     v4: 100.64.0.0/10
 
+  noise:
+    privateKey: "***REMOVED***"
+
   derp:
     server:
       enabled: false
@@ -309,6 +312,7 @@ hydra:
       regionCode: "headscale"
       regionName: "Headscale Embedded DERP"
       stunListenAddr: "0.0.0.0:3478"
+      privateKey: "***REMOVED***"
     urls:
       - "https://controlplane.tailscale.com/derpmap/default"
     paths: []
@@ -1048,7 +1052,7 @@ postgres-hydra:
       size: "50Gi"
   
   auth:
-    database: "hydra"
+    database: "postgres"
     username: "hydra"
     password: "hydra"
 
