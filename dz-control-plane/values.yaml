@@ -286,6 +286,8 @@ hydra:
   # -- Annotations
   annotations: {}
 
+  serverUrl: https://hydra.selfzero.net
+
   postgres:
     host: "dz-postgres-hydra"
     port: 5432
