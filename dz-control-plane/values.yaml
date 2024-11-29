@@ -492,25 +492,25 @@ polland:
     # Available queues created from worker
     queues:
       - name: fast
-        replicaCount: 3
+        replicaCount: 1
         autoscaling:
           enabled: false 
           minReplicas: 3
           maxReplicas: 5
       - name: build
-        replicaCount: 3
+        replicaCount: 1
         autoscaling:
           enabled: false 
           minReplicas: 3
           maxReplicas: 5
       - name: workload
-        replicaCount: 3
+        replicaCount: 1
         autoscaling:
           enabled: false 
           minReplicas: 3
           maxReplicas: 5
       - name: cluster
-        replicaCount: 3
+        replicaCount: 1
         autoscaling:
           enabled: false 
           minReplicas: 3
@@ -529,6 +529,11 @@ polland:
   flower:
     # -- Number of replicas for Polland Flower
     replicas: 1
+    service:
+      # -- Port of the Flower service
+      port: 5555
+      # -- Type of the Flower service
+      type: ClusterIP
 
   celeryExporter:
     # -- Number of replicas for Polland Celery Exporter
