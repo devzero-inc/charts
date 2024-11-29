@@ -563,7 +563,7 @@ polland:
     MYSQL_DATABASE: "polland"
     MYSQL_USER: "polland"
     MYSQL_PASSWORD: "polland"
-    MYSQL_HOST: "dz-control-plane-mysql-polland"
+    MYSQL_HOST: "dz-control-plane-mysql-polland-headless"
     MYSQL_ROOT_PASSWORD: "polland"
     REDIS_URL: "redis://dz-control-plane-redis-polland-master:6379/0"
 
@@ -576,6 +576,8 @@ polland:
     DJANGO_SECRET_KEY: "super_secret_key"
     CELERY_FLOWER_USER: "devzero"
     CELERY_FLOWER_PASSWORD: "devzero"
+
+    BASE_POLLAND_URL: "http://0.0.0.0:8000"
 
   # Polland autoscaling configuration
   autoscaling:
@@ -603,7 +605,7 @@ polland:
   # Polland service configuration
   service:
     # -- Port of the Polland service
-    port: 8443
+    port: 8000
     # -- Port of the Polland Metrics service
     metricsPort: 9090
     # -- Type of the Polland service
@@ -675,7 +677,7 @@ pulse:
   mysql:
     user: pulse
     password: pulse
-    host: dz-control-plane-mysql-pulse
+    host: dz-control-plane-mysql-pulse-headless
     port: 3306
     database: pulse
 
@@ -1056,18 +1058,21 @@ mysql-polland:
     username: "polland"
     database: "polland"
     password: "polland"
+    rootPassword: "polland"
 
 mysql-pulse:
   auth:
     username: "pulse"
     database: "pulse"
     password: "pulse"
+    rootPassword: "pulse"
 
 mysql-vault:
   auth:
     username: "vault"
     database: "vault"
     password: "vault"
+    rootPassword: "vault"
 
 # MongoDB external dependencies
 mongodb:
