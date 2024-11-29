@@ -12,7 +12,7 @@ data:
     listener_endpoint: "0.0.0.0:{{ .Values.backend.service.port }}"
     redis_url: {{ .Values.backend.redis.url }}
     mongodb_url: {{ .Values.backend.mongo.url }}
-    pulse_host: http://pulse
+    pulse_host: "http://{{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}"
     pulse_port: {{ .Values.pulse.service.port }}
     log:
       filepath:
@@ -22,7 +22,7 @@ data:
     auth0_client_id: ""
     auth0_api_client_id: "" 
     auth0_api_client_secret: "" 
-    polland_url: "http://polland:{{ .Values.polland.service.port }}"
+    polland_url: "http://{{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}:{{ .Values.polland.service.port }}"
     default_cli_version: latest
     default_cli_install_dir: /usr/local/bin
     hydra_url: {{ .Values.backend.hydra.url }}
