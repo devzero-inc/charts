@@ -1,5 +1,6 @@
 {{- $root := . -}}
 {{- range $queue := $root.Values.polland.worker.queues }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
