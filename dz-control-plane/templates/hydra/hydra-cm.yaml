@@ -17,6 +17,9 @@ data:
     prefixes:
       v6: {{ .Values.hydra.cidr.v6 }}
       v4: {{ .Values.hydra.cidr.v4 }}
+
+    noise:
+      private_key: {{ .Values.hydra.noise.privateKey }}
     
     derp:
       server:
@@ -25,22 +28,20 @@ data:
         region_code: {{ .Values.hydra.derp.server.regionCode }}
         region_name: {{ .Values.hydra.derp.server.regionName }}
         stun_listen_addr: {{ .Values.hydra.derp.server.stunListenAddr }}
+        private_key: {{ .Values.hydra.derp.server.privateKey }}
     
-      urls:
-        - https://controlplane.tailscale.com/derpmap/default
-      paths: []
-      auto_update_enabled: true
-      update_frequency: 24h
       urls:
         {{- range .Values.hydra.derp.urls }}
           - {{ . | quote }}
         {{- end }}
-        paths:
-        {{- range .Values.hydra.derp.paths }}
-          - {{ . | quote }}
-        {{- end }}
-        auto_update_enabled: {{ .Values.hydra.derp.autoUpdateEnabled | quote }}
-        update_frequency: {{ .Values.hydra.derp.updateFrequency | quote }}
+      {{- if .Values.hydra.derp.paths }}
+      paths:
+      {{- range .Values.hydra.derp.paths }}
+        - {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      auto_update_enabled: {{ .Values.hydra.derp.autoUpdateEnabled | quote }}
+      update_frequency: {{ .Values.hydra.derp.updateFrequency | quote }}
     
     disable_check_updates: false
     ephemeral_node_inactivity_timeout: 30m
