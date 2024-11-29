@@ -86,11 +86,12 @@ spec:
           resources:
             {{ toYaml .Values.hydra.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /app/api-gateway/config/self_hosted.yaml
+            - mountPath: /etc/headscale/self_hosted.yaml
               name: config
+              subPath: self_hosted.yaml
           env:
-            - name: ENVIRONMENT
-              value: "self_hosted"
+            - name: HEADSCALE_CONFIG
+              value: "/etc/headscale/self_hosted.yaml"
       volumes:
         - name: config
           configMap:

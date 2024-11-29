@@ -155,7 +155,7 @@ backend:
     password: ""
 
   mongo:
-    url: mongodb://mongo:27017
+    url: "mongodb://devzero@dz-control-plane-mongodb-0.dz-control-plane-mongodb-headless:27017/backend?directConnection=true"
 
   hydra:
     url: https://hydra.selfzero.net
@@ -1049,23 +1049,24 @@ postgres:
 
   pulse:
 
-# Mysql external dependencies 
-mysql:
-  polland:
-    auth:
-      username: "polland"
-      database: "polland"
-      password: "polland"
+# Mysql external dependencies
+mysql-polland:
+  auth:
+    username: "polland"
+    database: "polland"
+    password: "polland"
 
-  pulse:
-      username: "pulse"
-      database: "pulse"
-      password: "pulse"
+mysql-pulse:
+  auth:
+    username: "pulse"
+    database: "pulse"
+    password: "pulse"
 
-  vault:
-      username: "vault"
-      database: "vault"
-      password: "vault"
+mysql-vault:
+  auth:
+    username: "vault"
+    database: "vault"
+    password: "vault"
 
 # MongoDB external dependencies
 mongodb:
@@ -1087,60 +1088,60 @@ mongodb:
       - ""
 
 # Redis external dependencies
-redis:
-  backend:
-    architecture: "standalone"
-    
-    master:
-      persistence:
-        enabled: true
-      serviceAccount:
-        create: false
-    
+redis-backend:
+  architecture: "standalone"
+  
+  master:
+    persistence:
+      enabled: true
     serviceAccount:
       create: false
-    
-    auth:
-      password: ""
-    
-    replica:
-      replicaCount: 0
+  
+  serviceAccount:
+    create: false
+  
+  auth:
+    password: ""
+  
+  replica:
+    replicaCount: 0
+  
 
-  hydra:
-    architecture: "standalone"
-    
-    master:
-      persistence:
-        enabled: true
-      serviceAccount:
-        create: false
-    
+redis-hydra:
+  architecture: "standalone"
+  
+  master:
+    persistence:
+      enabled: true
     serviceAccount:
       create: false
-    
-    auth:
-      password: ""
-    
-    replica:
-      replicaCount: 0
+  
+  serviceAccount:
+    create: false
+  
+  auth:
+    password: ""
+  
+  replica:
+    replicaCount: 0
 
-  polland:
-    architecture: "standalone"
-    
-    master:
-      persistence:
-        enabled: true
-      serviceAccount:
-        create: false
-    
+redis-polland:
+  architecture: "standalone"
+  
+  master:
+    persistence:
+      enabled: true
     serviceAccount:
       create: false
-    
-    auth:
-      password: ""
-    
-    replica:
-      replicaCount: 0
+  
+  serviceAccount:
+    create: false
+  
+  auth:
+    password: ""
+  
+  replica:
+    replicaCount: 0
 
 # TimescaleDB external dependencies
 timescaledb-single:
@@ -1150,6 +1151,9 @@ timescaledb-single:
       PATRONI_SUPERUSER_PASSWORD: "pulse"
       PATRONI_REPLICATION_PASSWORD: "pulse"
       PATRONI_admin_PASSWORD: "pulse"
+
+artifactory:
+  databaseUpgradeReady: true
 
 # Elasticmq external dependencies
 elasticmq:
