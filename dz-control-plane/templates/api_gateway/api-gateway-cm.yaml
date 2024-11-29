@@ -16,4 +16,4 @@ data:
       filepath:
         - stdout
     vaulted_auth_public_key: {{ .Values.auth.publicKey | quote }}
-    backend_url: "http://backend:{{ .Values.backend.service.port }}"
+    backend_url: "http://{{ include "devzero.resourceName" (dict "ctx" . "component" "backend") }}:{{ .Values.backend.service.port }}"
