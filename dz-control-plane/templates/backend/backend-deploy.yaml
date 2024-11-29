@@ -60,7 +60,7 @@ spec:
             - name: metrics-port
               containerPort: {{ .Values.backend.service.metricsPort }}
               protocol: TCP
-            - containerPort: 8081
+            - containerPort: 8080
               name: health
               protocol: TCP
           livenessProbe:
@@ -86,7 +86,7 @@ spec:
           resources:
             {{ toYaml .Values.backend.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /root/config/self_hosted.yaml
+            - mountPath: /config/self_hosted.yaml
               name: config
               subPath: self_hosted.yaml
           env:
