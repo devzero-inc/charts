@@ -16,7 +16,7 @@ data:
     queue_url: {{ .Values.logsrv.queue.url }}
     num_consumers: 20
     
-    self_hosted: false
+    self_hosted: true
     
     allowed_cors_origins:
     {{- range .Values.logsrv.allowedCorsOrigins }}
