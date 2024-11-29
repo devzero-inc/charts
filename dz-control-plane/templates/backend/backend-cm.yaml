@@ -11,7 +11,7 @@ data:
     healthcheck_port: 8080
     listener_endpoint: "0.0.0.0:{{ .Values.backend.service.port }}"
     redis_url: {{ .Values.backend.redis.url }}
-    mongodb_url: {{ .Values.backend.redis.url }}
+    mongodb_url: {{ .Values.backend.mongo.url }}
     pulse_host: http://pulse
     pulse_port: {{ .Values.pulse.service.port }}
     log:
