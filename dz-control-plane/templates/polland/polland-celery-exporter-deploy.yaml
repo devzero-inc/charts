@@ -53,6 +53,8 @@ spec:
         - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
           image: "{{ .Values.image.repository }}/{{ .Values.polland.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /start-celery-exporter
           ports:
             - name: metrics-port
               containerPort: {{ .Values.polland.service.metricsPort }}

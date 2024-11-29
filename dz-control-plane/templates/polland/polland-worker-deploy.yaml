@@ -33,6 +33,9 @@ spec:
         - name: {{ printf "%s-worker-%s" $root.Chart.Name $queue.name }}
           image: "{{ $root.Values.image.repository }}/{{ $root.Values.polland.imageName }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
           imagePullPolicy: {{ $root.Values.image.pullPolicy }}
+          command:
+            - /entrypoint
+            - /start-celeryworker
           ports:
             - name: metrics-port 
               containerPort: {{ $root.Values.polland.service.metricsPort }}

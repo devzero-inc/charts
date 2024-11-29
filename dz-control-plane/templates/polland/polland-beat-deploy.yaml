@@ -53,6 +53,9 @@ spec:
         - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
           image: "{{ .Values.image.repository }}/{{ .Values.polland.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /entrypoint
+            - /start-celerybeat
           resources:
             {{ toYaml .Values.polland.resources | nindent 12 }}
           env:
