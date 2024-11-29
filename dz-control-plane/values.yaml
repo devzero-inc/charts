@@ -1222,3 +1222,11 @@ elasticmq:
           contentBasedDeduplication = true
         }
       }
+
+# Minio external dependencies
+minio:
+  replicas: 5
+
+  resources:
+    requests:
+      memory: 2Gi
