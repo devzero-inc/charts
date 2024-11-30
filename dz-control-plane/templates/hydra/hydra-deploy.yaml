@@ -60,12 +60,19 @@ spec:
             - name: http
               containerPort: {{ .Values.hydra.service.port }}
               protocol: TCP
-            - name: metrics-port
+            - name: metrics
               containerPort: {{ .Values.hydra.service.metricsPort }}
               protocol: TCP
-            - containerPort: 8081
-              name: health
-              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 2
           resources:
             {{ toYaml .Values.hydra.resources | nindent 12 }}
           volumeMounts:
