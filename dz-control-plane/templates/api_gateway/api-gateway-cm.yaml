@@ -7,6 +7,18 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   self_hosted.yaml: |
+    auth0_domains:
+    {{- range .Values.gateway.auth0.domains }}
+      - {{ . | quote }}
+    {{- end }}
+    auth0_audience:
+    {{- range .Values.gateway.auth0.audience }}
+      - {{ . | quote }}
+    {{- end }}
+    allowed_cors_origins:
+    {{- range .Values.gateway.cors.allowedOrigins }}
+      - {{ . | quote }}
+    {{- end }}
     listener_endpoint: "0.0.0.0:{{ .Values.gateway.service.port }}"
     listener_tls: false
     prometheus_port: {{ .Values.gateway.service.metricsPort }}

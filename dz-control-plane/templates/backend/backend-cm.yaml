@@ -63,13 +63,14 @@ data:
       dora_datasource_id: {{ .Values.backend.grafana.doraDatasourceId }}
       oda_datasource_id: {{ .Values.backend.grafana.odaDatasourceId }}
       password: {{ .Values.backend.grafana.password }}
-    self_hosted: false
+    self_hosted: true
     license_key: {{ .Values.backend.licenseKey }}
     arch: {{ .Values.backend.arch }}
     docker_registry: {{ .Values.backend.registry.url }}
     service_keys:
       cortex: {{ .Values.backend.cortex.key }}
     vaulted_auth_private_key: {{ .Values.auth.privateKey | quote }}
+    jwt_private_key: {{ .Values.auth.privateKey | quote }}
     cli_session_url_template: {{ .Values.backend.cli.urlTemplate }}
     auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
     cost_prometheus_url: {{ .Values.backend.mimir.url }}

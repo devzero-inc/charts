@@ -10,7 +10,7 @@ image:
   # -- Devzero container image tag'
   tag: "latest"
   # -- Container pull policy
-  pullPolicy: Always 
+  pullPolicy: Always
   # -- Optionally specify an array of imagePullSecrets
   pullSecrets:
     - replicated-pull-secret
@@ -28,9 +28,9 @@ serviceAccount:
 
 auth:
   # -- Base64 encoded public key for JWT verification
-  publicKey: ""
+  publicKey: "***REMOVED***"
   # -- Base64 encoded private key for JWT verification
-  privateKey: ""
+  privateKey: "***REMOVED***"
 
 gateway:
   # -- Number of replicas for Api Gateway
@@ -61,6 +61,17 @@ gateway:
 
   # -- Annotations
   annotations: {}
+
+  auth0:
+    domains:
+      - auth.selfzero.net
+    audience:
+      - https://selfzero.net/webapi
+      - https://selfzero.net/api/v2/
+  cors:
+    allowedOrigins:
+      - https://console.selfzero.net
+      - https://web.selfzero.net
 
   # Api Gateway autoscaling configuration
   autoscaling:
@@ -913,17 +924,20 @@ web:
   env: 
     NEXT_AUTH_ENABLE_CREDENTIALS_PROVIDER: "true"
     NEXT_PUBLIC_BYPASS_AUTH0_FLOW: "true"
-
+    NEXT_PUBLIC_SELF_HOSTED: "true"
+    AUTH0_BASE_URL: "https://web.selfzero.net"
+    NEXTAUTH_URL: "https://web.selfzero.net/api/auth"
+    NEXT_AUTH_JWT_SIGNING_PRIV_KEY: "***REMOVED***"
 
   resources:
     # -- Resource limits for Web 
     limits:
-      cpu: 1000m
-      memory: 1Gi
+      cpu: 2000m
+      memory: 4Gi
     # -- Resource requests for Web 
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 1000m
+      memory: 2Gi
 
   # Web service configuration
   service:
