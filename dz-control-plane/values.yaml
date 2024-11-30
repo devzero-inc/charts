@@ -899,6 +899,10 @@ web:
     # -- Target memory utilisation percentage for Web 
     targetMemoryUtilizationPercentage: 80
 
+  # -- Env configuration for web configmap
+  env: 
+    MYSQL_PORT: "3306"
+
   resources:
     # -- Resource limits for Web 
     limits:
@@ -1022,10 +1026,12 @@ vault:
           database   = "vault"
         }
   
-        #seal "awskms" {
-        #  kms_key_id = "${kms_key_id}"
-        #  region = "${region}"
-        #}
+        seal "awskms" {
+          kms_key_id = ""
+          region = ""
+          access_key = ""
+          secret_key = ""
+        }
 
 # Postgres external dependencies
 postgres-logsrv:

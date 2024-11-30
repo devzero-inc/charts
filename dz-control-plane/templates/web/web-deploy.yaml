@@ -62,3 +62,6 @@ spec:
           env:
             - name: ENVIRONMENT
               value: "self_hosted"
+          envFrom:
+            - configMapRef:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
