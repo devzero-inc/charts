@@ -6,6 +6,10 @@ metadata:
     {{- include "devzero.labels" (dict "ctx" . "component" "web") | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
 data:
+  API_BASE_URL_V2: "https://api.selfzero.net"
+  NEXT_PUBLIC_API_LOGS_URL: "https://logs.selfzero.net"
+  NEXT_PUBLIC_GRAFANA_URL: "https://grafana.selfzero.net"
+  NEXT_PUBLIC_HYDRA_URL: "https://hydra.selfzero.net"
   {{- $ctx := . -}}
   {{- range $key, $val := index .Values.web.env }}
   {{ $key }}: {{ tpl $val $ctx | quote }}
