@@ -101,23 +101,25 @@ gateway:
   # Api Gateway ingress configuration
   ingress:
     # -- Specify if the Api Gateway Ingress is enabled
-    enabled: false
+    enabled: enable
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Api Gateway ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Api Gateway ingress
     hosts:
-      - host: api.devzero.example.com
+      - host: api.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Api Gateway ingress
     tls:
       - secretName: devzero-api-tls
         hosts:
-          - api.devzero.example.com
+          - api.selfzero.net
 
 
 backend:
@@ -358,18 +360,20 @@ hydra:
   # Hydra ingress configuration
   ingress:
     # -- Specify if the Hydra Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Hydra ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Hydra ingress
     hosts:
       - host: hydra.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Hydra ingress
     tls:
       - secretName: devzero-hydra-tls
@@ -463,18 +467,20 @@ logsrv:
   # Logsrv ingress configuration
   ingress:
     # -- Specify if the Logsrv Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Hydra ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Hydra ingress
     hosts:
       - host: logsrv.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Logsrv ingress
     tls:
       - secretName: devzero-logsrv-tls
@@ -629,18 +635,20 @@ polland:
   # Polland ingress configuration
   ingress:
     # -- Specify if the Polland Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Polland ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Polland ingress
     hosts:
       - host: polland.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Polland ingress
     tls:
       - secretName: devzero-polland-tls
@@ -737,18 +745,20 @@ pulse:
   # Pulse ingress configuration
   ingress:
     # -- Specify if the Pulse Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Pulse ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Pulse ingress
     hosts:
       - host: pulse.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Pulse ingress
     tls:
       - secretName: devzero-pulse-tls
@@ -918,9 +928,7 @@ web:
   # Web service configuration
   service:
     # -- Port of the Web service
-    port: 8443
-    # -- Port of the Web Metrics service
-    metricsPort: 9090
+    port: 3000
     # -- Type of the Web service
     type: ClusterIP
     # -- Annotations for the Web service
@@ -931,23 +939,25 @@ web:
   # Web ingress configuration
   ingress:
     # -- Specify if the Web Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
     # -- Annotations for the Web ingress
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- hosts configuration for the Web ingress
     hosts:
-      - host: selfzero.net
+      - host: web.selfzero.net
         paths:
           - path: /
             # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            # pathType: Prefix
+            pathType: Prefix
     # -- TLS configuration for the Web ingress
     tls:
       - secretName: devzero-web-tls
         hosts:
-          - selfzero.net
+          - web.selfzero.net
 
 #### External dependencies ####
 
@@ -978,7 +988,7 @@ vault:
       enabled: true
       labels: { }
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   
       # Optionally use ingressClassName instead of deprecated annotation.
