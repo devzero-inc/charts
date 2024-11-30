@@ -60,8 +60,11 @@ spec:
           resources:
             {{ toYaml .Values.web.resources | nindent 12 }}
           env:
-            - name: ENVIRONMENT
-              value: "self_hosted"
+            - name: "NEXTAUTH_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
+                  key: next-auth-secret
           envFrom:
             - configMapRef:
                 name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
