@@ -968,7 +968,6 @@ vault:
   
   server:
     enabled: true
-    extraArgs: "-config=/vault/userconfig/vault-extra-config/config.hcl"
     ingress:
       enabled: true
       labels: { }
@@ -1014,23 +1013,19 @@ vault:
         }
   
         service_registration "kubernetes" {}
+
+        storage "mysql" {
+          ha_enabled = true
+          address    = "dz-control-plane-mysql-vault-headless"
+          username   = "vault"
+          password   = "vault"
+          database   = "vault"
+        }
   
         #seal "awskms" {
         #  kms_key_id = "${kms_key_id}"
         #  region = "${region}"
         #}
-    volumes:
-      - name: vault-extra-config
-        secret:
-          defaultMode: 420
-          secretName: vault-extra-config
-    volumeMounts:
-      - mountPath: /vault/userconfig/vault-extra-config
-        name: vault-extra-config
-        readOnly: true
-
-# Minio external dependencies
-#minio:
 
 # Postgres external dependencies
 postgres-logsrv:
@@ -1065,6 +1060,9 @@ postgres-hydra:
 
 # Mysql external dependencies
 mysql-polland:
+  commonAnnotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-6"
   auth:
     username: "polland"
     database: "polland"
