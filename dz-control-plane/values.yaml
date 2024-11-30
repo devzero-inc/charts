@@ -901,7 +901,9 @@ web:
 
   # -- Env configuration for web configmap
   env: 
-    MYSQL_PORT: "3306"
+    NEXT_AUTH_ENABLE_CREDENTIALS_PROVIDER: "true"
+    NEXT_PUBLIC_BYPASS_AUTH0_FLOW: "true"
+
 
   resources:
     # -- Resource limits for Web 
