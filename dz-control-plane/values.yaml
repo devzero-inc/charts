@@ -168,7 +168,7 @@ backend:
     password: ""
 
   mongo:
-    url: "mongodb://devzero:backend@dz-control-plane-mongodb-headless:27017/backend?directConnection=true"
+    url: "mongodb://devzero:backend@dz-control-plane-mongodb-0.dz-control-plane-mongodb-headless:27017/backend?directConnection=true"
 
   hydra:
     url: https://hydra.selfzero.net
