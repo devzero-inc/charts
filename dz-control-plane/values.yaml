@@ -597,7 +597,7 @@ polland:
 
     USE_DOCKER: "yes"
     # Disable connection pooling in preprod because we are running a small container and we don't want to keep connections open.
-    CONN_MAX_AGE: "0"
+    CONN_MAX_AGE: "60"
     DJANGO_ALLOWED_HOSTS: "*"
     DJANGO_SETTINGS_MODULE: "config.settings.production"
     # This is supposed to be a secret, but since it is only used to encrypt sessions and we don't use sessions, it can be defined plaintext.
@@ -605,7 +605,13 @@ polland:
     CELERY_FLOWER_USER: "devzero"
     CELERY_FLOWER_PASSWORD: "devzero"
 
-    BASE_POLLAND_URL: "http://0.0.0.0:8000"
+    BASE_POLLAND_URL: "https://polland.selfzero.net"
+
+    VAULT_ENDPOINT: "https://vault.selfzero.net/"
+    VAULT_AUTH_METHOD: "kubernetes"
+    VAULT_SECRETS_MOUNT_POINT: "vault-csi-production-writer"
+    LOGSRV_DEFAULT_QUEUE: "http://dz-control-plane-elasticmq:9324/queue/logsrv.fifo"
+    LOGSRV_DEFAULT_REGION: "elasticmq"
 
   # Polland autoscaling configuration
   autoscaling:
