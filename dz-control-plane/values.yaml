@@ -898,6 +898,13 @@ vault:
           secret_key = ""
         }
 
+
+  ingress:
+    # -- Specify if the Vault Ingress is enabled
+    enabled: true
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+
 # Postgres external dependencies
 postgres-logsrv:
   metrics:
