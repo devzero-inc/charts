@@ -5,40 +5,30 @@ metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "hydra") | nindent 4 }}
-  {{- with .Values.hydra.ingress.annotations }}
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.hydra.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.hydra.ingress.ingressClassName }}
   ingressClassName: {{ .Values.hydra.ingress.ingressClassName }}
-  {{- end -}}
-  {{- if .Values.hydra.ingress.tls }}
-  tls:
-    {{- range .Values.hydra.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      {{- with .secretName }}
-      secretName: {{ . }}
-      {{- end }}
-    {{- end }}
   {{- end }}
+  tls:
+    - secretName: devzero-hydra-tls
+      hosts:
+        - "hydra.{{ .Values.domain }}"
   rules:
-    {{- range .Values.hydra.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: "hydra.{{ .Values.domain }}"
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "hydra") }}
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
                 port:
-                  number: {{ $.Values.hydra.service.port }}
-          {{- end }}
-    {{- end }}
+                  number: {{ .Values.hydra.service.port }}
 {{- end }}
