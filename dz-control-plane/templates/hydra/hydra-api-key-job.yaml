@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}-api-key
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "hydra") | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "devzero.podLabels" (dict "ctx" . "component" "hydra") | nindent 8 }}
+      annotations:
+        {{- include "devzero.podAnnotations" (dict "ctx" . "component" "hydra") | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: api-key-generator
+        image: "{{ .Values.image.repository }}/{{ .Values.hydra.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command:
+          - /headscale
+          - apikeys
+          - create
+        volumeMounts:
+          - mountPath: /etc/headscale/self_hosted.yaml
+            name: config
+            subPath: self_hosted.yaml
+        env:
+          - name: HEADSCALE_CONFIG
+            value: "/etc/headscale/self_hosted.yaml"
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
