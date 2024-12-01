@@ -58,7 +58,7 @@ data:
       auto_create_subscriptions: false
     grafana:
       enabled: {{ .Values.backend.grafana.enabled }}
-      url: {https://grafana.{{ .Values.domain }}
+      url: https://grafana.{{ .Values.domain }}
       datasource_id: {{ .Values.backend.grafana.datasourceId }}
       dora_datasource_id: {{ .Values.backend.grafana.doraDatasourceId }}
       oda_datasource_id: {{ .Values.backend.grafana.odaDatasourceId }}
