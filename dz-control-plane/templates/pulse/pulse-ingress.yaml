@@ -36,9 +36,9 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "pulse") }}
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}
                 port:
-                  number: {{ $.Values.pulse.service.port }}
+                  number: {{ .Values.pulse.service.port }}
           {{- end }}
     {{- end }}
 {{- end }}
