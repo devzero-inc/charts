@@ -5,40 +5,30 @@ metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
-  {{- with .Values.gateway.ingress.annotations }}
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.gateway.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.gateway.ingress.ingressClassName }}
   ingressClassName: {{ .Values.gateway.ingress.ingressClassName }}
-  {{- end -}}
-  {{- if .Values.gateway.ingress.tls }}
-  tls:
-    {{- range .Values.gateway.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      {{- with .secretName }}
-      secretName: {{ . }}
-      {{- end }}
-    {{- end }}
   {{- end }}
+  tls:
+    - secretName: devzero-api-tls
+      hosts:
+        - "api.{{ .Values.domain }}"
   rules:
-    {{- range .Values.gateway.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: "api.{{ .Values.domain }}"
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" $ "component" "gateway") }}
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
                 port:
-                  number: {{ $.Values.gateway.service.port }}
-          {{- end }}
-    {{- end }}
+                  number: {{ .Values.gateway.service.port }}
 {{- end }}

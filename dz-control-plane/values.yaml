@@ -4,6 +4,8 @@ nameOverride: null
 # -- Overrides the chart's computed fullname.
 fullnameOverride: null
 
+domain: "example.com"
+
 image:
   # -- Devzero container image repository'
   repository: images.devzero.io/proxy/devzero-control-plane/056855531191.dkr.ecr.us-west-2.amazonaws.com
@@ -62,16 +64,6 @@ gateway:
   # -- Annotations
   annotations: {}
 
-  auth0:
-    domains:
-      - auth.selfzero.net
-    audience:
-      - https://selfzero.net/webapi
-      - https://selfzero.net/api/v2/
-  cors:
-    allowedOrigins:
-      - https://console.selfzero.net
-      - https://web.selfzero.net
 
   # Api Gateway autoscaling configuration
   autoscaling:
@@ -115,23 +107,6 @@ gateway:
     enabled: enable
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-    # -- Annotations for the Api Gateway ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Api Gateway ingress
-    hosts:
-      - host: api.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Api Gateway ingress
-    tls:
-      - secretName: devzero-api-tls
-        hosts:
-          - api.selfzero.net
-
 
 backend:
   # -- Number of replicas for Backend 
@@ -171,11 +146,7 @@ backend:
     url: "mongodb://devzero:backend@dz-control-plane-mongodb-0.dz-control-plane-mongodb-headless:27017/backend?directConnection=true"
 
   hydra:
-    url: https://hydra.selfzero.net
-    apiKey: 
-
-  control:
-    url: https://api.selfzero.net
+    apiKey:
 
   logsrv:
     queue: http://dz-control-plane-elasticmq:9324/queue/logsrv.fifo
@@ -185,27 +156,18 @@ backend:
     appId: 
     appPrivateKey: ""
 
-  stripe:
-    apiKey: ""
-    webhookSecret: ""
-    autoCreateSubscriptions: false
-
   mimir:
     url: http://mimir:8080/prometheus
 
   hibernation:
     enabled: false
 
-  cli:
-    urlTemplate: https://selfzero.net/dashboard/settings/user-settings?cli-session-id=%s
-
   sendgrid:
     apiKey: test-key
 
   grafana:
     enabled: false
-    url: grafana.selfzero.net
-    datasourceId: 
+    datasourceId:
     doraDatasourceId:
     odaDatasourceId:
     password:
@@ -268,7 +230,6 @@ backend:
     # -- Labels for the Backend service
     labels: {}
 
-
 hydra:
   # -- Number of replicas for Hydra
   replicas: 1
@@ -298,8 +259,6 @@ hydra:
 
   # -- Annotations
   annotations: {}
-
-  serverUrl: https://hydra.selfzero.net
 
   postgres:
     host: "dz-control-plane-postgres-hydra"
@@ -374,22 +333,6 @@ hydra:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-    # -- Annotations for the Hydra ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Hydra ingress
-    hosts:
-      - host: hydra.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Hydra ingress
-    tls:
-      - secretName: devzero-hydra-tls
-        hosts:
-          - hydra.selfzero.net
 
 logsrv:
   # -- Number of replicas for Logsrv
@@ -427,15 +370,6 @@ logsrv:
   postgres:
     url: postgresql://logsrv:logsrv@dz-control-plane-postgres-logsrv:5432/logsrv
     password: logsrv
-
-  allowedCorsOrigins:
-    - "http://localhost:3000"
-  
-  auth0:
-    domains:
-      - "auth.devzero.example"
-    audience:
-      - "https://devzero.example/api"
   
   refreshJwksTimer: 3600
 
@@ -481,22 +415,6 @@ logsrv:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-    # -- Annotations for the Hydra ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Hydra ingress
-    hosts:
-      - host: logsrv.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Logsrv ingress
-    tls:
-      - secretName: devzero-logsrv-tls
-        hosts:
-          - logsrv.selfzero.net
 
 polland:
   worker:
@@ -605,9 +523,6 @@ polland:
     CELERY_FLOWER_USER: "devzero"
     CELERY_FLOWER_PASSWORD: "devzero"
 
-    BASE_POLLAND_URL: "https://polland.selfzero.net"
-
-    VAULT_ENDPOINT: "https://vault.selfzero.net/"
     VAULT_AUTH_METHOD: "kubernetes"
     VAULT_SECRETS_MOUNT_POINT: "vault-csi-production-writer"
     LOGSRV_DEFAULT_QUEUE: "http://dz-control-plane-elasticmq:9324/queue/logsrv.fifo"
@@ -648,29 +563,6 @@ polland:
     annotations: {}
     # -- Labels for the Polland service
     labels: {}
-
-  # Polland ingress configuration
-  ingress:
-    # -- Specify if the Polland Ingress is enabled
-    enabled: true
-    # -- Ingress Class Name. May be required for k8s >= 1.18
-    ingressClassName: "nginx"
-    # -- Annotations for the Polland ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Polland ingress
-    hosts:
-      - host: polland.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Polland ingress
-    tls:
-      - secretName: devzero-polland-tls
-        hosts:
-          - polland.selfzero.net
 
 pulse:
   # -- Number of replicas for Pulse 
@@ -762,25 +654,9 @@ pulse:
   # Pulse ingress configuration
   ingress:
     # -- Specify if the Pulse Ingress is enabled
-    enabled: true
+    enabled: false
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-    # -- Annotations for the Pulse ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Pulse ingress
-    hosts:
-      - host: pulse.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Pulse ingress
-    tls:
-      - secretName: devzero-pulse-tls
-        hosts:
-          - pulse.selfzero.net
 
 buildqd:
   # -- Number of replicas for Buildqd 
@@ -931,8 +807,6 @@ web:
     NEXT_AUTH_ENABLE_CREDENTIALS_PROVIDER: "true"
     NEXT_PUBLIC_BYPASS_AUTH0_FLOW: "true"
     NEXT_PUBLIC_SELF_HOSTED: "true"
-    AUTH0_BASE_URL: "https://web.selfzero.net"
-    NEXTAUTH_URL: "https://web.selfzero.net/api/auth"
     NEXT_AUTH_JWT_SIGNING_PRIV_KEY: "LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBck5paU5xcUtHaU1RNFdCNjhxemNpRVBnK1dOaFpoMjdabjVRNU8rbVhCMlNnNjBCCnNRd2JmWGd5UGJ4ckU1VlZGMHZ6SzZ4ZFlGblRxZXA2a0tXVURuYUJuczljN2R1T0huVTByaGxOTGt0d0ZDb2sKcHJKNFVwUUNWZDYzajBvZ0lBUzhHKzJrVFdMS09rLzBKUVdUTlY0Umx1cHdMMFFWd0ZteWxuSFBaU1IraVBZdwpsOEZKcllKWVYrZzZ3RXYxQit4RVdHek1tU1F6QlJKRFZJNjhhS1dGdVJCZ1UvWTVHTDFHQ21sRXZna3RFc29WCjFhZVpqcExIdmJUSVo4Tk1rVUNBMDdheG1RQUJoeURmTFNBaVg4S3k0VjZ3UmRMN2NNQitIQm8yTktMQjRzMG8KZEFobUt0L0xBTjBVODRWdXgvZXZXSDBFa2dWTjlabVdLb2J4RHdJREFRQUJBb0lCQVFDU3hwTlpJSkNOaVdGNApRVm1tWWF3VCtyQThsbXZMTDB4SHlOUWcxSERNb0VBZW1QZHF4UUZERnFKelVtRUxEREJwekJEKzhTdUorajJICmVKb0Q0dGRMUU03cGNPVlZCckEwcFFyTEhLa3h1dFcrQ2R0OXd1ZnlGOFd6N2FDcWlTT21qTjdBU0pqUkxpYlUKUmJqcEIwYnVkcWN4Skh1SFo2V2c1WXFGdnJlREJvaG4weG5FVkd5c2lwVGREc3hoUWZ3Yk5sdkMxc1JrbHlBMQpjVGdoMS84UE5TQytIU0FpVjE4aWhQVDh2UjQ0V2NXQ3k0QmFCZkJqbkloRGZFL2J3Z2NSUGg4Y0lGR1B0VFNMCkJsMWtPeUc4R2pPTG5jMHpFRmVGSVF5VmZtdDYvTXB6enRtMVFqOXpkMnh3Y1ExSkNDZExESDdmWEFmRzFGTzkKdGZsZVprY2hBb0dCQU9FbU9DKytjbE9nQUQ5bW5KRGlRejRDeExMTG9HMVZncHRNQWw2SDhaeG93b0NheFFRMQpBQStkM2ZPVXJ3TzFsU2IwUDFQNDBBL252QVIxZ2IwRVJSNlE0d0tBVnovQWp2REh1QUM0SjU0enZncHlhTzBDCmhQUllhdzVnYmFSYk4rQWx4SDNmWXhiaUx0dUNFTitoOFluOE5lbmJwU0J2WVFxVzBSSDR6RGlGQW9HQkFNU0gKdW9TMHo2RE5CUGgzMXAwNTZiM0pMV3lydDVvY1MwcnYxUjNoYkhQam11Ulo4Rk1OV3VDTlJhRHlYQi9IQVJhdApQNHF4T1NoRmY1Vjc5TU5vUktxZzNRcUJZQ2VRZDJBZjNpWW1abTNmNWI5Wi93T2tCdHpnNlA4OTZnN29jdmlnCkZhWlpIeXVHVmlacmkxdkltZDlNU0VSYlVzNjVEOGdCdzFtbXo0R0RBb0dCQUozNDhnMVZ3K08yN05XUFNxVkIKakVxVEtLNEd2NTVYRkJlZ2dqMFBoMC9tRlNxazdUMWhicFNHZ0xlcWlBM0ROMDZvcTFKZ3pxT0tSZHFmRkJPcQpUbEQrK2JqRWtmTXlTVmpaMk5ud1hDUGRUQ2NLVldLT2xQalluT3p1YlorWFBTSXhmYWVQdUhmUzVXdXcyK1A5ClBYdENraFZ1dm5KK2s0a1pmc0hzWG1YOUFvR0FOMVBHckttQ2NsQ0ZmN1d0RTZKRUxZdS9ZQUtQczdFWGVVYy8KaGlQNk5qM3pVeW9Hd0RyWVJMTkEwT2lxQ3NBcGpFckZ3clBWMVlLTFFuZ2RGZzM2bHRhbW85aDhTMmNlVkU5awphUFVTalFnbFU5TndPWVFwOG5EVzUxUjAyakdTZkhBRTZFbmF2cFFaR01QWi9jTGhucjJJOHNXSzhHdWxCN2VICldXdmVxeVVDZ1lFQXAwY0JBcUpEQzVPTFRYZHRUYkJYaW8zaHhnSktuTmIxVnROZzFpcXY2Q1lYVlBtQjFaT3cKUHB6bm5GSE5UVDhtLzhXbVBHMEkyZi84Ni9WWUUzTlYrdDZpZFRDK2g0S1NUQVlrUG55YmdKc1BLcjNyVFZ2UwpWK0dXWHhjb1VLZWZCaGkzTDN4SEcrNmxDbW5ldkNTdW03NjRhSEJkc2JTdTZBUWtldEpuNFN3PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQ=="
 
   resources:
@@ -962,22 +836,6 @@ web:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-    # -- Annotations for the Web ingress
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # -- hosts configuration for the Web ingress
-    hosts:
-      - host: web.selfzero.net
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, ... etc.) might also be required for some Ingress Controllers
-            pathType: Prefix
-    # -- TLS configuration for the Web ingress
-    tls:
-      - secretName: devzero-web-tls
-        hosts:
-          - web.selfzero.net
 
 #### External dependencies ####
 
@@ -988,7 +846,7 @@ issuer:
   # ACME server URL
   acme: https://acme-v02.api.letsencrypt.org/directory 
   # Email address used for ACME registration
-  email: example@selfzero.net
+  email: email@example.com
 
 # Vault external dependencies
 vault:
@@ -1005,32 +863,7 @@ vault:
   server:
     enabled: true
     ingress:
-      enabled: true
-      labels: { }
-      annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  
-      # Optionally use ingressClassName instead of deprecated annotation.
-      # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
-      ingressClassName: "nginx"
-  
-      # As of Kubernetes 1.19, all Ingress Paths must have a pathType configured. The default value below should be sufficient in most cases.
-      # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types for other possible values.
-      pathType: Prefix
-  
-      # When HA mode is enabled and K8s service registration is being used,
-      # configure the ingress to point to the Vault active service.
-      activeService: true
-      hosts:
-        - host: vault.selfzero.net
-          paths: [ ]
-      ## Extra paths to prepend to the host configuration. This is useful when working with annotation based services.
-      extraPaths: [ ]
-      tls:
-        - hosts:
-            - vault.selfzero.net
-          secretName: devzero-vault-tls
+      enabled: false
     auditStorage:
       enabled: true
     dataStorage:

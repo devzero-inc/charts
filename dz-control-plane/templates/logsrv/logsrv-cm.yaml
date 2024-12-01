@@ -17,17 +17,13 @@ data:
     num_consumers: 20
     
     self_hosted: true
-    
+
     allowed_cors_origins:
-    {{- range .Values.logsrv.allowedCorsOrigins }}
-      - {{ . | quote }}
-    {{- end }}
+      - https://{{ .Values.domain }}
+      - https://web.s{{ .Values.domain }}
     auth0_domains:
-    {{- range .Values.logsrv.auth0.domains }}
-      - {{ . | quote }}
-    {{- end }}
+      - auth.{{ .Values.domain }}
     auth0_audience:
-    {{- range .Values.logsrv.auth0.audience }}
-      - {{ . | quote }}
-    {{- end }}
+      - https://{{ .Values.domain }}/webapi
+      - https://{{ .Values.domain }}/api/v2/
     refresh_jwks_timer: {{ .Values.logsrv.refreshJwksTimer }}
