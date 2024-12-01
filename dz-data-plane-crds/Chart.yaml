@@ -1,5 +1,5 @@
 apiVersion: v2
-name: dz-crds
+name: dz-data-plane-crds
 description: DevZero Self Hosted CRDs
 type: application
 version: 0.1.2
