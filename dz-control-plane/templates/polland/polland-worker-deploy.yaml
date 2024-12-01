@@ -6,7 +6,6 @@ kind: Deployment
 metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" $root "component" "polland") }}-worker-{{ $queue.name }}
   labels:
-    {{- include "devzero.labels" (dict "ctx" $root "component" "polland") | nindent 4 }}
     app.kubernetes.io/name: polland-worker-{{ $queue.name }}
   namespace: {{ $root.Release.Namespace | quote }}
 spec:
@@ -19,12 +18,10 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      {{- include "devzero.selectorLabels" (dict "ctx" $root "component" "polland") | nindent 6 }}
       app.kubernetes.io/name: polland-worker-{{ $queue.name }}
   template:
     metadata:
       labels:
-        {{- include "devzero.selectorLabels" (dict "ctx" $root "component" "polland") | nindent 8 }}
         app.kubernetes.io/name: polland-worker-{{ $queue.name }}
       annotations:
         {{- include "devzero.podAnnotations" (dict "ctx" $root "component" "polland") | nindent 8 }}

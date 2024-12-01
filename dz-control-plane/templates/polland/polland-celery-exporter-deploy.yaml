@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}-celery-exporter
   labels:
-    {{- include "devzero.labels" (dict "ctx" . "component" "polland") | nindent 4 }}
+    app.kubernetes.io/name: polland-celery-exporter
   annotations:
     {{- toYaml .Values.polland.annotations | nindent 4 }}
   namespace: {{ .Release.Namespace | quote }}
@@ -17,11 +17,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      {{- include "devzero.selectorLabels" (dict "ctx" . "component" "polland") | nindent 6 }}
+      app.kubernetes.io/name: polland-celery-exporter
   template:
     metadata:
       labels:
-        {{- include "devzero.podLabels" (dict "ctx" . "component" "polland") | nindent 8 }}
+        app.kubernetes.io/name: polland-celery-exporter
       annotations:
         {{- include "devzero.podAnnotations" (dict "ctx" . "component" "polland") | nindent 8 }}
     spec:
@@ -50,7 +50,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}
+        - name: {{ include "devzero.resourceName" (dict "ctx" . "component" "polland") }}-celery-exporter
           image: "{{ .Values.image.repository }}/{{ .Values.polland.imageName}}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
