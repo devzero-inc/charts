@@ -9,10 +9,10 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.vault.ingressClassName }}
-  ingressClassName: {{ .Values.web.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.vault.ingress.ingressClassName }}
   {{- end }}
   tls:
-    - secretName: devzero-web-tls
+    - secretName: devzero-vault-tls
       hosts:
         - "vault.{{ .Values.domain }}"
   rules:
@@ -25,5 +25,5 @@ spec:
               service:
                 name: {{ include "devzero.resourceName" (dict "ctx" . "component" "vault") }}
                 port:
-                  number: {{ .Values.web.service.port }}
+                  number: 8200
 {{- end }}

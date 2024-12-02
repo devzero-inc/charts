@@ -34,7 +34,7 @@ data:
       us-west-1: subnet-0b566588698169939
       eu-west-1: subnet-0c6d09e1d8ed15aee
     production: true
-    default_team_type: "PRO"
+    default_team_type: "FREE"
     posthog:
       fake: true
     shared_storage:

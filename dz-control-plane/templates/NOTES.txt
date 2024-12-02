@@ -1,0 +1,11 @@
+###############################################################################
+# HYDRA API KEY INFORMATION
+###############################################################################
+
+The Hydra API key was successfully created during the installation.
+
+You can retrieve the API key using the following command:
+
+```bash
+kubectl get configmap hydra-api-key -n {{ .Release.Namespace }} -o jsonpath="{.data.api-key}"
+```
