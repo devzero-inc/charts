@@ -922,6 +922,10 @@ postgres-logsrv:
   architecture: "standalone"
 
 postgres-hydra:
+  commonAnnotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-6"
+
   metrics:
     enabled: true
   
@@ -1018,6 +1022,10 @@ redis-buildqd:
     replicaCount: 0
   
 redis-hydra:
+  commonAnnotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-6"
+
   architecture: "standalone"
   
   master:
