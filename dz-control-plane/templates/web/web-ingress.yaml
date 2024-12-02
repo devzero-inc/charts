@@ -1,0 +1,34 @@
+{{- if .Values.web.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "web") | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.web.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.web.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.web.ingress.ingressClassName }}
+  {{- end }}
+  tls:
+    - secretName: devzero-web-tls
+      hosts:
+        - {{ .Values.domain }}
+  rules:
+    - host: {{ .Values.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
+                port:
+                  number: {{ .Values.web.service.port }}
+{{- end }}

@@ -1,0 +1,81 @@
+apiVersion: v2
+name: dz-control-plane
+description: DevZero Self Hosted Control Plane
+type: application
+version: 0.1.6
+appVersion: "v0.1.6"
+home: https://docs.devzero.io/docs/self-hosted
+icon: https://avatars.githubusercontent.com/u/71745520?s=400&u=10cb3d6fb9e509873fc2591ca11220573399a5de&v=4 # TODO: maybe host this image in devzero.io/static/...
+dependencies:
+  - name: replicated
+    repository: oci://registry.replicated.com/library
+    version: 1.0.0-beta.31
+  - name: vault
+    version: 0.28.1
+    repository: https://helm.releases.hashicorp.com
+  - name: minio
+    version: 5.2.0
+    repository: https://charts.min.io/
+    condition: minio.enabled
+  # TODO: helm chart for sqs drop-in replacement (or allow logsrv to use kafka)
+  - name: mysql
+    alias: mysql-polland
+    version: 11.1.19
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: mysql
+    alias: mysql-pulse
+    version: 11.1.19
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: mysql
+    alias: mysql-vault
+    version: 11.1.19
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: mongodb
+    version: 16.0.3
+    repository: https://charts.bitnami.com/bitnami
+    condition: mongodb.enabled
+  - name: redis
+    alias: redis-buildqd
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
+    alias: redis-backend
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
+    alias: redis-hydra
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: redis
+    alias: redis-polland
+    version: 20.2.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: postgresql
+    alias: postgres-logsrv
+    version: 16.0.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: postgresql
+    alias: postgres-hydra
+    version: 16.0.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: timescaledb-single
+    version: 0.33.1
+    repository: https://charts.timescale.com
+    condition: timescale.enabled
+  - name: artifactory
+    version: 107.90.15
+    repository: https://charts.jfrog.io
+    condition: artifactory.enabled
+  - name: elasticmq 
+    version: 0.2.0
+    repository: https://chatwork.github.io/charts
+    condition: elasticmq.enabled

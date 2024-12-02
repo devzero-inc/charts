@@ -1,0 +1,34 @@
+{{- if .Values.logsrv.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "logsrv") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "logsrv") | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.logsrv.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.logsrv.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.logsrv.ingress.ingressClassName }}
+  {{- end }}
+  tls:
+    - secretName: devzero-logs-tls
+      hosts:
+        - "logs.{{ .Values.domain }}"
+  rules:
+    - host: "logs.{{ .Values.domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "logsrv") }}
+                port:
+                  number: {{ .Values.logsrv.service.port }}
+{{- end }}

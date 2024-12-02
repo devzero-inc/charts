@@ -1,0 +1,44 @@
+{{- if .Values.pulse.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}
+  labels:
+    {{- include "devzero.labels" (dict "ctx" . "component" "pulse") | nindent 4 }}
+  {{- with .Values.pulse.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.pulse.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.pulse.ingress.ingressClassName }}
+  {{- end -}}
+  {{- if .Values.pulse.ingress.tls }}
+  tls:
+    {{- range .Values.pulse.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- with .secretName }}
+      secretName: {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.pulse.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}
+                port:
+                  number: {{ .Values.pulse.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}
