@@ -92,6 +92,11 @@ spec:
           env:
             - name: CONFIG_FILENAME
               value: "self_hosted"
+            - name: HYDRA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hydra-api-key
+                  key: api-key
       volumes:
         - name: config
           configMap:
