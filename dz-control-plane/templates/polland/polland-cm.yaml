@@ -11,6 +11,7 @@ metadata:
 data:
   BASE_POLLAND_URL: "http://0.0.0.0:{{ .Values.polland.service.port }}"
   VAULT_ENDPOINT: "https://vault.{{ .Values.domain }}/"
+  SELF_HOSTED: "true"
   {{- $ctx := . -}}
   {{- range $key, $val := index .Values.polland.env }}
   {{ $key }}: {{ tpl $val $ctx | quote }}
