@@ -4,7 +4,7 @@ nameOverride: null
 # -- Overrides the chart's computed fullname.
 fullnameOverride: null
 
-domain: "selfzero.net"
+domain: "example.com"
 
 image:
   # -- Devzero container image repository'
@@ -189,7 +189,7 @@ backend:
   arch: amd64
 
   registry:
-    url: http://dz-control-plane-docker-registry:5000
+    url: 
 
   cortex:
     key: ""
@@ -522,6 +522,8 @@ polland:
     DJANGO_SECRET_KEY: "super_secret_key"
     CELERY_FLOWER_USER: "devzero"
     CELERY_FLOWER_PASSWORD: "devzero"
+    
+    SELF_HOSTED: "True"
 
     VAULT_AUTH_METHOD: "kubernetes"
     VAULT_SECRETS_MOUNT_POINT: "vault-csi-production-writer"
@@ -685,7 +687,7 @@ buildqd:
     region: elasticmq
 
   redis:
-    url: redis://dz-control-plane-redis-buildqd-master:6379
+    url: redis://dz-control-plane-redis-polland-master:6379
 
   # Buildqd autoscaling configuration
   autoscaling:
@@ -893,10 +895,10 @@ vault:
         }
   
         seal "awskms" {
-          kms_key_id = "arn:aws:kms:eu-central-1:730335320324:key/be236a36-3c51-4da7-b698-e41a4c36d5b4"
-          region = "eu-central-1"
-          access_key = "AKIA2UC3ATECKCDWYGXB"
-          secret_key = "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"
+          kms_key_id = ""
+          region = ""
+          access_key = ""
+          secret_key = ""
         }
 
 
@@ -1071,9 +1073,6 @@ timescaledb-single:
       PATRONI_REPLICATION_PASSWORD: "pulse"
       PATRONI_admin_PASSWORD: "pulse"
 
-artifactory:
-  databaseUpgradeReady: true
-
 # Elasticmq external dependencies
 elasticmq:
   service:
@@ -1123,23 +1122,3 @@ registry:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
-
-# Artifactory external dependencies
-artifactory:
-  ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-
-    enabled: true
-
-    className: "nginx"
-
-    hosts:
-      - artifactory.selfzero.net
-
-    extraPaths: [ ]
-    tls:
-      - hosts:
-          - artifactory.selfzero.net
-        secretName: devzero-artifactory-tls

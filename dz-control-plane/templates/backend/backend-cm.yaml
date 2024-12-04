@@ -36,7 +36,7 @@ data:
     production: true
     default_team_type: "FREE"
     posthog:
-      fake: true
+      use-fake: true
     shared_storage:
       allowed_team: {{ .Values.backend.storage.allowedTeam }}
       ceph_cluster_id: {{ .Values.backend.storage.ceph.clusterId }}
