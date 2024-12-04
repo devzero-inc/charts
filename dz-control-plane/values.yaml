@@ -17,6 +17,10 @@ image:
   pullSecrets:
     - replicated-pull-secret
 
+workspace:
+  image: public.ecr.aws/v1i4e1r2/devzero-devbox-base
+  localTag: base-latest
+
 global:
   podAnnotations: {}
 
@@ -189,7 +193,7 @@ backend:
   arch: amd64
 
   registry:
-    url: 
+    url: dz-control-plane-docker-registry:5000/devzero-devbox-base
 
   cortex:
     key: ""
@@ -524,6 +528,10 @@ polland:
     CELERY_FLOWER_PASSWORD: "devzero"
     
     SELF_HOSTED: "True"
+
+    USE_INSECURE_REGISTRY: "True"
+    USE_ECR_REGISTRY: "False"
+    USE_LOCAL_LOGSRV: "True"
 
     VAULT_AUTH_METHOD: "kubernetes"
     VAULT_SECRETS_MOUNT_POINT: "vault-csi-production-writer"

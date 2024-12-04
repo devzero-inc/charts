@@ -181,6 +181,9 @@ data:
     # optionally mirror configuration can be done by defining it as a registry.
     #[registry."yourmirror.local:5000"]
     #http = true
+    
+    [registry."dz-control-plane-docker-registry:5000"]
+    http = true
 
     # Frontend control
     [frontend."dockerfile.v0"]

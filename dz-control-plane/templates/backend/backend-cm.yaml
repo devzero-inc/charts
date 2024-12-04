@@ -46,7 +46,6 @@ data:
       ceph_user_credentials: {{ .Values.backend.storage.ceph.userCredentials }}
       ceph_username: {{ .Values.backend.storage.ceph.username }}
     environment: self-hosted 
-    default_dz_base_image_tag: base-latest 
     devzero_team_id: {{ .Values.backend.mainTeamId }}
     logsrv_default_queue: {{ .Values.backend.logsrv.queue }}
     logsrv_default_region: {{ .Values.backend.logsrv.region }}
@@ -74,3 +73,7 @@ data:
     cli_session_url_template: https://{{ .Values.domain }}/dashboard/settings/user-settings?cli-session-id=%s
     auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
     cost_prometheus_url: {{ .Values.backend.mimir.url }}
+    default_dz_base_image_tag: base-latest 
+
+
+
