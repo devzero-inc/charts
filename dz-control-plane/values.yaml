@@ -963,6 +963,9 @@ mysql-polland:
     rootPassword: "polland"
 
 mysql-pulse:
+  commonAnnotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
   auth:
     username: "pulse"
     database: "pulse"
@@ -1056,6 +1059,10 @@ redis-hydra:
 
 redis-polland:
   architecture: "standalone"
+
+  commonAnnotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
   
   master:
     persistence:

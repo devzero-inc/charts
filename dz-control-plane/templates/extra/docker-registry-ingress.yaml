@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  {{- if .Values.registry.ingressClassName }}
+  {{- if .Values.registry.ingress.ingressClassName }}
   ingressClassName: {{ .Values.registry.ingress.ingressClassName }}
   {{- end }}
   tls:
