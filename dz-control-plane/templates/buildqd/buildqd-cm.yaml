@@ -22,6 +22,7 @@ data:
     log:
       filepath:
         - stderr
+      level: debug
       format: json
 ---
 apiVersion: v1
