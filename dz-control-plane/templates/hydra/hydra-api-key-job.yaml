@@ -66,6 +66,14 @@ spec:
             - -c
             - |
               set -e
+              echo "Checking if Hydra API key secret exists..."
+
+              # Check if the secret exists
+              if kubectl get secret hydra-api-key -n {{ .Release.Namespace }} >/dev/null 2>&1; then
+                echo "Secret hydra-api-key already exists. Skipping creation."
+                exit 0
+              fi
+
               echo "Waiting for Hydra Pod to be ready..."
               
               # Wait until the pod is ready

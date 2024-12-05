@@ -4,7 +4,7 @@ nameOverride: null
 # -- Overrides the chart's computed fullname.
 fullnameOverride: null
 
-domain: "mauro.selfzero.net"
+domain: "domain.example"
 
 image:
   # -- Devzero container image repository'
@@ -504,6 +504,10 @@ polland:
   # -- Annotations
   annotations: {}
 
+  redis:
+    host: dz-control-plane-redis-polland-master
+    port: 6379
+
   # -- Env configuration for polland configmap
   env: 
     MYSQL_PORT: "3306"
@@ -996,24 +1000,6 @@ mongodb:
 
 # Redis external dependencies
 redis-backend:
-  architecture: "standalone"
-  
-  master:
-    persistence:
-      enabled: true
-    serviceAccount:
-      create: false
-  
-  serviceAccount:
-    create: false
-  
-  auth:
-    enabled: false
-  
-  replica:
-    replicaCount: 0
-
-redis-buildqd:
   architecture: "standalone"
   
   master:
