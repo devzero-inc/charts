@@ -6,6 +6,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "200g"
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.registry.ingress.ingressClassName }}
