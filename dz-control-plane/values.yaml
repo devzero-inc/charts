@@ -10,9 +10,9 @@ image:
   # -- Devzero container image repository'
   repository: images.devzero.io/proxy/devzero-control-plane/056855531191.dkr.ecr.us-west-2.amazonaws.com
   # -- Devzero container image tag'
-  tag: "latest"
+  tag: "dsh-v1.0.0"
   # -- Container pull policy
-  pullPolicy: Always
+  pullPolicy: IfNotPresent 
   # -- Optionally specify an array of imagePullSecrets
   pullSecrets:
     - replicated-pull-secret
