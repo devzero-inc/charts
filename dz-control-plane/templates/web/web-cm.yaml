@@ -11,8 +11,8 @@ data:
   NEXT_PUBLIC_API_LOGS_URL: "https://logs.{{ .Values.domain }}"
   NEXT_PUBLIC_GRAFANA_URL: "https://grafana.{{ .Values.domain }}"
   NEXT_PUBLIC_HYDRA_URL: "https://hydra.{{ .Values.domain }}"
-  AUTH0_BASE_URL: "https://web.{{ .Values.domain }}"
-  NEXTAUTH_URL: "https://web.{{ .Values.domain }}/api/auth"
+  AUTH0_BASE_URL: "https://{{ .Values.domain }}"
+  NEXTAUTH_URL: "https://{{ .Values.domain }}/api/auth"
   {{- $ctx := . -}}
   {{- range $key, $val := index .Values.web.env }}
   {{ $key }}: {{ tpl $val $ctx | quote }}

@@ -20,7 +20,6 @@ data:
 
     allowed_cors_origins:
       - https://{{ .Values.domain }}
-      - https://web.s{{ .Values.domain }}
     auth0_domains:
       - auth.{{ .Values.domain }}
     auth0_audience:

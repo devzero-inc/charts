@@ -16,7 +16,6 @@ data:
     cors:
       allowedOrigins:
         - https://{{ .Values.domain }}
-        - https://web.s{{ .Values.domain }}
     listener_endpoint: "0.0.0.0:{{ .Values.gateway.service.port }}"
     listener_tls: false
     prometheus_port: {{ .Values.gateway.service.metricsPort }}
