@@ -4,7 +4,7 @@ nameOverride: null
 # -- Overrides the chart's computed fullname.
 fullnameOverride: null
 
-domain: "example.com"
+domain: "mauro.selfzero.net"
 
 image:
   # -- Devzero container image repository'
@@ -113,7 +113,7 @@ gateway:
     ingressClassName: "nginx"
 
 backend:
-  # -- Number of replicas for Backend 
+  # -- Number of replicas for Backend
   replicas: 1
 
   imageName: "backend"
@@ -191,9 +191,6 @@ backend:
   licenseKey: "***REMOVED***"
 
   arch: amd64
-
-  registry:
-    url: dz-control-plane-docker-registry:5000/devzero-devbox-base
 
   cortex:
     key: ""
@@ -374,7 +371,7 @@ logsrv:
   postgres:
     url: postgresql://logsrv:logsrv@dz-control-plane-postgres-logsrv:5432/logsrv
     password: logsrv
-  
+
   refreshJwksTimer: 3600
 
   # Logsrv autoscaling configuration
@@ -477,8 +474,8 @@ polland:
   celeryExporter:
     # -- Number of replicas for Polland Celery Exporter
     replicas: 1
-    
-  # -- Number of replicas for Polland 
+
+  # -- Number of replicas for Polland
   replicas: 1
 
   imageName: "polland"
@@ -526,7 +523,7 @@ polland:
     DJANGO_SECRET_KEY: "super_secret_key"
     CELERY_FLOWER_USER: "devzero"
     CELERY_FLOWER_PASSWORD: "devzero"
-    
+
     SELF_HOSTED: "True"
 
     USE_INSECURE_REGISTRY: "True"
@@ -537,27 +534,26 @@ polland:
     VAULT_SECRETS_MOUNT_POINT: "vault-csi-production-writer"
     LOGSRV_DEFAULT_QUEUE: "http://dz-control-plane-elasticmq:9324/queue/logsrv.fifo"
     LOGSRV_DEFAULT_REGION: "elasticmq"
-    DOCKER_REGISTRY: "dz-control-plane-docker-registry:5000"
 
   # Polland autoscaling configuration
   autoscaling:
-    # -- Enable autoscaling for Polland 
+    # -- Enable autoscaling for Polland
     enabled: false
-    # -- Minimum autoscaling replicas for Polland 
+    # -- Minimum autoscaling replicas for Polland
     minReplicas: 1
-    # -- Maximum autoscaling replicas for Polland 
+    # -- Maximum autoscaling replicas for Polland
     maxReplicas: 3
-    # -- Target CPU utilisation percentage for Polland 
+    # -- Target CPU utilisation percentage for Polland
     targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for Polland 
+    # -- Target memory utilisation percentage for Polland
     targetMemoryUtilizationPercentage: 80
 
   resources:
-    # -- Resource limits for Polland 
+    # -- Resource limits for Polland
     limits:
       cpu: 1000m
       memory: 1Gi
-    # -- Resource requests for Polland 
+    # -- Resource requests for Polland
     requests:
       cpu: 100m
       memory: 128Mi
@@ -576,7 +572,7 @@ polland:
     labels: {}
 
 pulse:
-  # -- Number of replicas for Pulse 
+  # -- Number of replicas for Pulse
   replicas: 1
 
   imageName: "pulse"
@@ -628,23 +624,23 @@ pulse:
 
   # Pulse autoscaling configuration
   autoscaling:
-    # -- Enable autoscaling for Pulse 
+    # -- Enable autoscaling for Pulse
     enabled: false
-    # -- Minimum autoscaling replicas for Pulse 
+    # -- Minimum autoscaling replicas for Pulse
     minReplicas: 1
-    # -- Maximum autoscaling replicas for Pulse 
+    # -- Maximum autoscaling replicas for Pulse
     maxReplicas: 3
-    # -- Target CPU utilisation percentage for Pulse 
+    # -- Target CPU utilisation percentage for Pulse
     targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for Pulse 
+    # -- Target memory utilisation percentage for Pulse
     targetMemoryUtilizationPercentage: 80
 
   resources:
-    # -- Resource limits for Pulse 
+    # -- Resource limits for Pulse
     limits:
       cpu: 1000m
       memory: 1Gi
-    # -- Resource requests for Pulse 
+    # -- Resource requests for Pulse
     requests:
       cpu: 100m
       memory: 128Mi
@@ -670,7 +666,7 @@ pulse:
     ingressClassName: "nginx"
 
 buildqd:
-  # -- Number of replicas for Buildqd 
+  # -- Number of replicas for Buildqd
   replicas: 1
 
   imageName: "buildqd"
@@ -699,23 +695,23 @@ buildqd:
 
   # Buildqd autoscaling configuration
   autoscaling:
-    # -- Enable autoscaling for Buildqd 
+    # -- Enable autoscaling for Buildqd
     enabled: false
-    # -- Minimum autoscaling replicas for Buildqd 
+    # -- Minimum autoscaling replicas for Buildqd
     minReplicas: 1
-    # -- Maximum autoscaling replicas for Buildqd 
+    # -- Maximum autoscaling replicas for Buildqd
     maxReplicas: 3
-    # -- Target CPU utilisation percentage for Buildqd 
+    # -- Target CPU utilisation percentage for Buildqd
     targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for Buildqd 
+    # -- Target memory utilisation percentage for Buildqd
     targetMemoryUtilizationPercentage: 80
 
   resources:
-    # -- Resource limits for Buildqd 
+    # -- Resource limits for Buildqd
     limits:
       cpu: 1000m
       memory: 1Gi
-    # -- Resource requests for Buildqd 
+    # -- Resource requests for Buildqd
     requests:
       cpu: 100m
       memory: 128Mi
@@ -757,11 +753,11 @@ buildqd:
       - tcp://0.0.0.0:1234
   
     resources:
-      # -- Resource limits for Buildqd 
+      # -- Resource limits for Buildqd
       limits:
         cpu: 1000m
         memory: 1Gi
-      # -- Resource requests for Buildqd 
+      # -- Resource requests for Buildqd
       requests:
         cpu: 100m
         memory: 128Mi
@@ -771,7 +767,7 @@ buildqd:
       storageSize: 100Gi
 
 web:
-  # -- Number of replicas for Web 
+  # -- Number of replicas for Web
   replicas: 1
 
   imageName: "web"
@@ -802,15 +798,15 @@ web:
 
   # Web autoscaling configuration
   autoscaling:
-    # -- Enable autoscaling for Web 
+    # -- Enable autoscaling for Web
     enabled: false
-    # -- Minimum autoscaling replicas for Web 
+    # -- Minimum autoscaling replicas for Web
     minReplicas: 1
-    # -- Maximum autoscaling replicas for Web 
+    # -- Maximum autoscaling replicas for Web
     maxReplicas: 3
-    # -- Target CPU utilisation percentage for Web 
+    # -- Target CPU utilisation percentage for Web
     targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for Web 
+    # -- Target memory utilisation percentage for Web
     targetMemoryUtilizationPercentage: 80
 
   # -- Env configuration for web configmap
@@ -821,11 +817,11 @@ web:
     NEXT_AUTH_JWT_SIGNING_PRIV_KEY: "***REMOVED***"
 
   resources:
-    # -- Resource limits for Web 
+    # -- Resource limits for Web
     limits:
       cpu: 2000m
       memory: 4Gi
-    # -- Resource requests for Web 
+    # -- Resource requests for Web
     requests:
       cpu: 1000m
       memory: 2Gi
@@ -857,20 +853,20 @@ issuer:
   # ACME server URL
   acme: https://acme-v02.api.letsencrypt.org/directory 
   # Email address used for ACME registration
-  email: email@example.com
+  email: email@selfzero.net
 
 # Vault external dependencies
 vault:
   global:
     enabled: true
-  
+
   injector:
     enabled: false
     metrics:
       enabled: true
   ui:
     enabled: true
-  
+
   server:
     enabled: true
     ingress:
@@ -885,13 +881,13 @@ vault:
       config: |
         disable_mlock = true
         ui = true
-  
+        
         listener "tcp" {
           tls_disable = 1
           address = "[::]:8200"
           cluster_address = "[::]:8201"
         }
-  
+        
         service_registration "kubernetes" {}
 
         storage "mysql" {
@@ -901,7 +897,7 @@ vault:
           password   = "vault"
           database   = "vault"
         }
-  
+        
         seal "awskms" {
           kms_key_id = ""
           region = ""
@@ -1034,7 +1030,7 @@ redis-buildqd:
   
   replica:
     replicaCount: 0
-  
+
 redis-hydra:
   commonAnnotations:
     "helm.sh/hook": pre-install,pre-upgrade
@@ -1098,15 +1094,14 @@ elasticmq:
     port: 9324
     config: |
       include classpath("application.conf")
-  
+      
       node-address {
           protocol = http
           host = {{ template "elasticmq.fullname" . }}
           port = {{ .Values.elasticmq.port }}
           context-path = ""
       }
-  
-  
+      
       rest-sqs {
           enabled = true
           bind-port = {{ .Values.elasticmq.port }}

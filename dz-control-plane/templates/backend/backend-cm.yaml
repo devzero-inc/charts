@@ -65,7 +65,7 @@ data:
     self_hosted: true
     license_key: {{ .Values.backend.licenseKey }}
     arch: {{ .Values.backend.arch }}
-    docker_registry: {{ .Values.backend.registry.url }}
+    docker_registry: "registry.{{.Values.domain}}/devzero-devbox-base"
     service_keys:
       cortex: {{ .Values.backend.cortex.key }}
     vaulted_auth_private_key: {{ .Values.auth.privateKey | quote }}
