@@ -34,9 +34,9 @@ serviceAccount:
 
 auth:
   # -- Base64 encoded public key for JWT verification
-  publicKey: "***REMOVED***"
+  publicKey: ""
   # -- Base64 encoded private key for JWT verification
-  privateKey: "***REMOVED***"
+  privateKey: ""
 
 gateway:
   # -- Number of replicas for Api Gateway
@@ -204,7 +204,7 @@ backend:
 
   mainTeamId: ""
 
-  licenseKey: "***REMOVED***"
+  licenseKey: "" # development key
 
   arch: amd64
 
@@ -294,7 +294,7 @@ hydra:
     v4: 100.64.0.0/10
 
   noise:
-    privateKey: "***REMOVED***"
+    privateKey: ""
 
   derp:
     server:
@@ -303,7 +303,7 @@ hydra:
       regionCode: "headscale"
       regionName: "Headscale Embedded DERP"
       stunListenAddr: "0.0.0.0:3478"
-      privateKey: "***REMOVED***"
+      privateKey: ""
     urls:
       - "https://controlplane.tailscale.com/derpmap/default"
     paths: []
@@ -669,7 +669,7 @@ pulse:
     database: pulse
 
   devlake:
-    secret: "***REMOVED***"
+    secret: ""
 
   openApi:
     token: ""
@@ -881,7 +881,7 @@ web:
     NEXT_AUTH_ENABLE_CREDENTIALS_PROVIDER: "true"
     NEXT_PUBLIC_BYPASS_AUTH0_FLOW: "true"
     NEXT_PUBLIC_SELF_HOSTED: "true"
-    NEXT_AUTH_JWT_SIGNING_PRIV_KEY: "***REMOVED***"
+    NEXT_AUTH_JWT_SIGNING_PRIV_KEY: ""
 
   resources:
     # -- Resource limits for Web
