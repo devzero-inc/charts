@@ -124,7 +124,6 @@ rook-ceph-cluster:
       allowMultiplePerNode: false
       volumeClaimTemplate:
         spec:
-          storageClassName: standard-rwo
           resources:
             requests:
               storage: "40Gi"

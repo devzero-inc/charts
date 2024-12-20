@@ -1,3 +1,4 @@
+{{- $svcPort := .Values.gateway.service.port -}}
 {{- if .Values.gateway.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16,19 +17,31 @@ spec:
   {{- if .Values.gateway.ingress.ingressClassName }}
   ingressClassName: {{ .Values.gateway.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.gateway.ingress.tls }}
   tls:
-    - secretName: devzero-api-tls
-      hosts:
-        - "api.{{ .Values.domain }}"
+    {{- range .Values.gateway.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: "api.{{ .Values.domain }}"
+    {{- range .Values.gateway.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
                 name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
                 port:
-                  number: {{ .Values.gateway.service.port }}
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end}}
 {{- end }}

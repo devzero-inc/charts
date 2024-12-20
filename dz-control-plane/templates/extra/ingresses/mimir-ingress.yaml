@@ -1,0 +1,29 @@
+{{- if .Values.registry.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "devzero.resourceName" (dict "ctx" . "component" "mimir") }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  {{- if .Values.registry.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.registry.ingress.ingressClassName }}
+  {{- end }}
+  tls:
+    - secretName: devzero-grafana-tls
+      hosts:
+        - "mimir.{{ .Values.domain }}"
+  rules:
+    - host: "mimir.{{ .Values.domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "mimir") }}
+                port:
+                  number: 80
+{{- end }}

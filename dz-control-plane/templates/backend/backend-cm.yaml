@@ -55,13 +55,17 @@ data:
       api_key: ""
       webhook_signing_secret: ""
       auto_create_subscriptions: false
-    grafana:
-      enabled: {{ .Values.backend.grafana.enabled }}
-      url: https://grafana.{{ .Values.domain }}
-      datasource_id: {{ .Values.backend.grafana.datasourceId }}
-      dora_datasource_id: {{ .Values.backend.grafana.doraDatasourceId }}
-      oda_datasource_id: {{ .Values.backend.grafana.odaDatasourceId }}
-      password: {{ .Values.backend.grafana.password }}
+    global_features:
+      grafana:
+        enabled: {{ .Values.backend.grafana.enabled }}
+        url: https://grafana.{{ .Values.domain }}
+        datasource_id: {{ .Values.backend.grafana.datasourceId }}
+        dora_datasource_id: {{ .Values.backend.grafana.doraDatasourceId }}
+        oda_datasource_id: {{ .Values.backend.grafana.odaDatasourceId }}
+        password: {{ .Values.backend.grafana.password }}
+        user: "admin"
+      dxi:
+        enabled: {{ .Values.backend.grafana.enabled }}
     self_hosted: true
     license_key: {{ .Values.backend.licenseKey }}
     arch: {{ .Values.backend.arch }}
@@ -73,7 +77,19 @@ data:
     cli_session_url_template: https://{{ .Values.domain }}/dashboard/settings/user-settings?cli-session-id=%s
     auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
     cost_prometheus_url: {{ .Values.backend.mimir.url }}
-    default_dz_base_image_tag: base-latest 
+    default_dz_base_image_tag: base-latest
+    vault_endpoint: "https://vault-internal-customers.devzero.dev/"
+    vault_auth_method: "k8s"
+    vault_token: ""
+    vault_store_mount_point: ""
+    vault_auth_secret_mount_point: ""
+    vault_auth_role: "customer-secret-writer"
+    github_app_install_url: ""
+    github_app_client_id: ""
+    github_app_client_secret: ""
+    github_webhook_secret: ""
+    nats_endpoint: ""
+    nats_token: ""
 
 
 
