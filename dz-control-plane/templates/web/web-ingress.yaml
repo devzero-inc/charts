@@ -1,3 +1,5 @@
+{{- $svcPort := .Values.web.service.port -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "web") }}
 {{- if .Values.web.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -6,8 +8,6 @@ metadata:
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "web") | nindent 4 }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   {{- with .Values.web.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -16,19 +16,31 @@ spec:
   {{- if .Values.web.ingress.ingressClassName }}
   ingressClassName: {{ .Values.web.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.web.ingress.tls }}
   tls:
-    - secretName: devzero-web-tls
-      hosts:
-        - {{ .Values.domain }}
+    {{- range .Values.web.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: {{ .Values.domain }}
+    {{- range .Values.web.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
+                name: {{ $svcName }}
                 port:
-                  number: {{ .Values.web.service.port }}
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end }}
 {{- end }}

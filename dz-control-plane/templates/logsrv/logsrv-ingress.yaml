@@ -1,3 +1,5 @@
+{{- $svcPort := .Values.logsrv.service.port -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "logsrv") }}
 {{- if .Values.logsrv.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -6,8 +8,6 @@ metadata:
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "logsrv") | nindent 4 }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   {{- with .Values.logsrv.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -16,19 +16,31 @@ spec:
   {{- if .Values.logsrv.ingress.ingressClassName }}
   ingressClassName: {{ .Values.logsrv.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.logsrv.ingress.tls }}
   tls:
-    - secretName: devzero-logs-tls
-      hosts:
-        - "logs.{{ .Values.domain }}"
+    {{- range .Values.logsrv.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: "logs.{{ .Values.domain }}"
+    {{- range .Values.logsrv.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "logsrv") }}
+                name: {{ $svcName }}
                 port:
-                  number: {{ .Values.logsrv.service.port }}
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end }}
 {{- end }}

@@ -1,29 +1,44 @@
-{{- if .Values.registry.ingress.enabled -}}
+{{- $svcPort := 80 -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "mimir") }}
+{{- if .Values.mimir.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "mimir") }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.mimir.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  {{- if .Values.registry.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.registry.ingress.ingressClassName }}
+  {{- if .Values.mimir.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.mimir.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.mimir.ingress.tls }}
   tls:
-    - secretName: devzero-grafana-tls
-      hosts:
-        - "mimir.{{ .Values.domain }}"
+    {{- range .Values.mimir.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: "mimir.{{ .Values.domain }}"
+    {{- range .Values.mimir.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "mimir") }}
+                name: {{ $svcName }}
                 port:
-                  number: 80
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end }}
 {{- end }}

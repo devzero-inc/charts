@@ -111,6 +111,10 @@ gateway:
     enabled: enable
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # -- TLS
     tls:
       - secretName: devzero-api-tls
@@ -348,6 +352,21 @@ hydra:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-hydra-tls
+        hosts:
+          - "hydra.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "hydra.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
 
 logsrv:
   # -- Number of replicas for Logsrv
@@ -430,6 +449,21 @@ logsrv:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-logsrv-tls
+        hosts:
+          - "logsrv.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "logsrv.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
 
 polland:
   worker:
@@ -676,12 +710,27 @@ pulse:
     # -- Labels for the Pulse service
     labels: {}
 
-  # Pulse ingress configuration
   ingress:
     # -- Specify if the Pulse Ingress is enabled
-    enabled: false
+    enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-pulse-tls
+        hosts:
+          - "pulse.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "pulse.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
+
 
 buildqd:
   # -- Number of replicas for Buildqd
@@ -861,6 +910,21 @@ web:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-web-tls
+        hosts:
+          - "{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
 
 #### External dependencies ####
 
@@ -923,12 +987,26 @@ vault:
           secret_key = ""
         }
 
-
   ingress:
     # -- Specify if the Vault Ingress is enabled
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-vault-tls
+        hosts:
+          - "vault.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "vault.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
 
 # Postgres external dependencies
 postgres-logsrv:
@@ -1132,6 +1210,67 @@ registry:
     enabled: true
     # -- Ingress Class Name. May be required for k8s >= 1.18
     ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "200g"
+    # -- TLS
+    tls:
+      - secretName: devzero-registry-tls
+        hosts:
+          - "registry.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "registry.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
+
+grafana:
+  ingress:
+    # -- Specify if the Grafana Ingress is enabled
+    enabled: true
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-grafana-tls
+        hosts:
+          - "grafana.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "grafana.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
+
+mimir:
+  ingress:
+    # -- Specify if the Mimir Ingress is enabled
+    enabled: true
+    # -- Ingress Class Name. May be required for k8s >= 1.18
+    ingressClassName: "nginx"
+    # -- Annotations
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # -- TLS
+    tls:
+      - secretName: devzero-mimir-tls
+        hosts:
+          - "mimir.{{ .Values.domain }}"
+    # -- Hosts
+    hosts:
+      - host: "mimir.{{ .Values.domain }}"
+        paths:
+          - path: /
+            pathType: Prefix
+
 
 kube-prometheus-stack:
   grafana:

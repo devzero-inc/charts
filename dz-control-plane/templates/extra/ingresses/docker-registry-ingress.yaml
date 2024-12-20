@@ -1,30 +1,44 @@
+{{- $svcPort := 5000 -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "docker-registry") }}
 {{- if .Values.registry.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "docker-registry") }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "200g"
+  {{- with .Values.registry.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.registry.ingress.ingressClassName }}
   ingressClassName: {{ .Values.registry.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.registry.ingress.tls }}
   tls:
-    - secretName: devzero-docker-registry-tls
-      hosts:
-        - "registry.{{ .Values.domain }}"
+    {{- range .Values.registry.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: "registry.{{ .Values.domain }}"
+    {{- range .Values.registry.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "docker-registry") }}
+                name: {{ $svcName }}
                 port:
-                  number: 5000
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end }}
 {{- end }}

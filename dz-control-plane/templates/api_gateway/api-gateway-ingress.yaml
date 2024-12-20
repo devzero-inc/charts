@@ -1,4 +1,5 @@
 {{- $svcPort := .Values.gateway.service.port -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
 {{- if .Values.gateway.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -7,8 +8,6 @@ metadata:
   labels:
     {{- include "devzero.labels" (dict "ctx" . "component" "gateway") | nindent 4 }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   {{- with .Values.gateway.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -39,7 +38,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "gateway") }}
+                name: {{ $svcName }}
                 port:
                   number: {{ $svcPort }}
         {{- end }}

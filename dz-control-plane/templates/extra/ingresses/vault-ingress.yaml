@@ -1,29 +1,44 @@
+{{- $svcPort := 8200 -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "vault") }}
 {{- if .Values.vault.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "vault") }}
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-self-hosted"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  {{- with .Values.vault.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
   {{- if .Values.vault.ingress.ingressClassName }}
   ingressClassName: {{ .Values.vault.ingress.ingressClassName }}
   {{- end }}
+  {{- if .Values.vault.ingress.tls }}
   tls:
-    - secretName: devzero-vault-tls
-      hosts:
-        - "vault.{{ .Values.domain }}"
+    {{- range .Values.vault.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+        {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: "vault.{{ .Values.domain }}"
+    {{- range .Values.vault.ingress.hosts }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+        {{- range .paths }}
+          - path: {{ .path }}
+            {{- if .pathType }}
+            pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "vault") }}
+                name: {{ $svcName }}
                 port:
-                  number: 8200
+                  number: {{ $svcPort }}
+        {{- end }}
+    {{- end }}
 {{- end }}

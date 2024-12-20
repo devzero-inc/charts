@@ -1,3 +1,5 @@
+{{- $svcPort := .Values.pulse.service.port -}}
+{{- $svcName := include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}
 {{- if .Values.pulse.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -19,26 +21,26 @@ spec:
     {{- range .Values.pulse.ingress.tls }}
     - hosts:
         {{- range .hosts }}
-        - {{ . | quote }}
+        - {{ tpl . $ | quote }}
         {{- end }}
-      {{- with .secretName }}
-      secretName: {{ . }}
-      {{- end }}
+      secretName: {{ tpl .secretName $ | quote }}
     {{- end }}
   {{- end }}
   rules:
     {{- range .Values.pulse.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-          {{- range .paths }}
+        {{- range .paths }}
           - path: {{ .path }}
+            {{- if .pathType }}
             pathType: {{ .pathType }}
+            {{- end }}
             backend:
               service:
-                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}
+                name: {{ $svcName }}
                 port:
-                  number: {{ .Values.pulse.service.port }}
-          {{- end }}
+                  number: {{ $svcPort }}
+        {{- end }}
     {{- end }}
 {{- end }}
