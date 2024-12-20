@@ -1,3 +1,4 @@
+{{- if .Values.hydra.job -}}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -106,3 +107,4 @@ spec:
               echo "API Key Generated: $API_KEY"
               # Save the API key in a secret
               kubectl create secret generic hydra-api-key --from-literal=api-key="$API_KEY" -n {{ .Release.Namespace }} --dry-run=client -o yaml | kubectl apply -f -
+{{- end }}

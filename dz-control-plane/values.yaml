@@ -261,6 +261,8 @@ hydra:
   # -- Annotations
   annotations: {}
 
+  job: true
+
   postgres:
     host: "dz-control-plane-postgres-hydra"
     port: 5432
