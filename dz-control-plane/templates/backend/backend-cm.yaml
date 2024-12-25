@@ -78,18 +78,20 @@ data:
     auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
     cost_prometheus_url: {{ .Values.backend.mimir.url }}
     default_dz_base_image_tag: base-latest
-    vault_endpoint: "https://vault-internal-customers.devzero.dev/"
+    vault_endpoint: "https://vault.{{ .Values.domain }}/"
     vault_auth_method: "k8s"
     vault_token: ""
-    vault_store_mount_point: ""
-    vault_auth_secret_mount_point: ""
+    vault_store_mount_point: "devzero"
+    vault_auth_secret_mount_point: "vault-csi-preproduction-writer"
     vault_auth_role: "customer-secret-writer"
-    github_app_install_url: ""
-    github_app_client_id: ""
-    github_app_client_secret: ""
-    github_webhook_secret: ""
-    nats_endpoint: ""
-    nats_token: ""
-
+    github_app_install_url: {{ .Values.backend.githubapp.github_app_install_url }}
+    github_app_client_id: {{ .Values.backend.githubapp.github_app_client_id }}
+    github_app_client_secret: {{ .Values.backend.githubapp.github_app_client_secret }}
+    github_app_id: {{ .Values.backend.githubapp.github_app_id }}
+    github_app_private_key: {{ .Values.backend.githubapp.github_app_private_key }}
+    github_webhook_secret: {{ .Values.backend.githubapp.github_webhook_secret }}
+    github_app_permit_url: {{ .Values.backend.githubapp.github_app_permit_url }}
+    github_app_token_exchange_url: {{ .Values.backend.githubapp.github_app_token_exchange_url }}
+    nats_endpoint: {{ .Values.backend.githubapp.nats_endpoint }}
 
 
