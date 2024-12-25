@@ -211,6 +211,18 @@ backend:
   cortex:
     key: ""
 
+  githubapp:
+    enabled: false
+    github_app_url: ""
+    github_app_client_id: ""
+    github_app_client_secret: ""
+    github_app_id: ""
+    github_app_private_key: ""
+    github_webhook_secret: ""
+    github_app_permit_url: "https://github.com/login/oauth/authorize"
+    github_app_token_exchange_url: "https://github.com/login/oauth/access_token"
+    nats_endpoint: ""
+
   # Backend autoscaling configuration
   autoscaling:
     # -- Enable autoscaling for Backend
