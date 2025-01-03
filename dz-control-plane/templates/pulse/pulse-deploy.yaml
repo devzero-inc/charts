@@ -72,6 +72,9 @@ spec:
           env:
             - name: CONFIG_FILENAME
               value: "self_hosted"
+          envFrom:
+            - secretRef:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "pulse") }}-secret
       volumes:
         - name: config
           configMap:

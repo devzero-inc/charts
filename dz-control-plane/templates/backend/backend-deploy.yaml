@@ -97,6 +97,16 @@ spec:
                 secretKeyRef:
                   name: hydra-api-key
                   key: api-key
+            - name: VAULTED_AUTH_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: private.key
+            - name: JWT_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: private.key
       volumes:
         - name: config
           configMap:

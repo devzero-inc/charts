@@ -7,9 +7,6 @@ appVersion: "v0.1.6"
 home: https://docs.devzero.io/docs/self-hosted
 icon: https://avatars.githubusercontent.com/u/71745520?s=400&u=10cb3d6fb9e509873fc2591ca11220573399a5de&v=4 # TODO: maybe host this image in devzero.io/static/...
 dependencies:
-  - name: replicated
-    repository: oci://registry.replicated.com/library
-    version: 1.0.0-beta.31
   - name: vault
     version: 0.28.1
     repository: https://helm.releases.hashicorp.com

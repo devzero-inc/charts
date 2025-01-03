@@ -33,7 +33,7 @@ spec:
             {{- toYaml .Values.buildqd.resources | nindent 12 }}
           volumeMounts:
             - name: buildqd-config
-              mountPath: /root/config/self_hosted.yaml
+              mountPath: /config/self_hosted.yaml
               subPath: self_hosted.yaml
             - name: buildkit-state
               mountPath: /var/lib/buildkit

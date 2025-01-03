@@ -92,6 +92,12 @@ spec:
           env:
             - name: ENVIRONMENT
               value: "self_hosted"
+            - name: VAULTED_AUTH_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: public.key
+
       volumes:
         - name: config
           configMap:

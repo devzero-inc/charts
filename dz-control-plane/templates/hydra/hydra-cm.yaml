@@ -20,9 +20,6 @@ data:
     prefixes:
       v6: {{ .Values.hydra.cidr.v6 }}
       v4: {{ .Values.hydra.cidr.v4 }}
-
-    noise:
-      private_key: {{ .Values.hydra.noise.privateKey }}
     
     derp:
       server:

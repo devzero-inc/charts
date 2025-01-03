@@ -6,16 +6,22 @@ fullnameOverride: null
 
 domain: "domain.example"
 
+credentials:
+  registry: ""
+  username: ""
+  password: ""
+  email: ""
+
 image:
   # -- Devzero container image repository'
-  repository: images.devzero.io/proxy/devzero-control-plane/056855531191.dkr.ecr.us-west-2.amazonaws.com
+  repository: docker.io/devzeroinc
   # -- Devzero container image tag'
-  tag: "dsh-v1.0.0"
+  tag: "v1.0.0"
   # -- Container pull policy
   pullPolicy: IfNotPresent
   # -- Optionally specify an array of imagePullSecrets
   pullSecrets:
-    - replicated-pull-secret
+    - pull-secret
 
 workspace:
   image: public.ecr.aws/v1i4e1r2/devzero-devbox-base
@@ -31,12 +37,6 @@ serviceAccount:
   annotations: {}
   # -- The name of the service account to use
   name: "devzero"
-
-auth:
-  # -- Base64 encoded public key for JWT verification
-  publicKey: ""
-  # -- Base64 encoded private key for JWT verification
-  privateKey: ""
 
 gateway:
   # -- Number of replicas for Api Gateway
@@ -204,8 +204,8 @@ backend:
 
   mainTeamId: ""
 
-  licenseKey: "" # development key
-
+  licenseKey: ""
+  
   arch: amd64
 
   cortex:
@@ -293,17 +293,9 @@ hydra:
     v6: fd7a:115c:a1e0::/48
     v4: 100.64.0.0/10
 
-  noise:
-    privateKey: ""
-
   derp:
     server:
       enabled: false
-      regionId: 999
-      regionCode: "headscale"
-      regionName: "Headscale Embedded DERP"
-      stunListenAddr: "0.0.0.0:3478"
-      privateKey: ""
     urls:
       - "https://controlplane.tailscale.com/derpmap/default"
     paths: []
@@ -881,7 +873,6 @@ web:
     NEXT_AUTH_ENABLE_CREDENTIALS_PROVIDER: "true"
     NEXT_PUBLIC_BYPASS_AUTH0_FLOW: "true"
     NEXT_PUBLIC_SELF_HOSTED: "true"
-    NEXT_AUTH_JWT_SIGNING_PRIV_KEY: ""
 
   resources:
     # -- Resource limits for Web
@@ -939,6 +930,8 @@ issuer:
 
 # Vault external dependencies
 vault:
+  job: true
+
   global:
     enabled: true
 
@@ -978,13 +971,6 @@ vault:
           username   = "vault"
           password   = "vault"
           database   = "vault"
-        }
-        
-        seal "awskms" {
-          kms_key_id = ""
-          region = ""
-          access_key = ""
-          secret_key = ""
         }
 
   ingress:

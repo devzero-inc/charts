@@ -65,6 +65,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}
                   key: next-auth-secret
+            - name: "NEXT_AUTH_JWT_SIGNING_PRIV_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: private.key
           envFrom:
             - configMapRef:
                 name: {{ include "devzero.resourceName" (dict "ctx" . "component" "web") }}

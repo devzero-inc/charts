@@ -72,8 +72,8 @@ data:
     docker_registry: "registry.{{.Values.domain}}/devzero-devbox-base"
     service_keys:
       cortex: {{ .Values.backend.cortex.key }}
-    vaulted_auth_private_key: {{ .Values.auth.privateKey | quote }}
-    jwt_private_key: {{ .Values.auth.privateKey | quote }}
+    vaulted_auth_private_key: ""
+    jwt_private_key: ""
     cli_session_url_template: https://{{ .Values.domain }}/dashboard/settings/user-settings?cli-session-id=%s
     auto_hibernation_enabled: {{ .Values.backend.hibernation.enabled }}
     cost_prometheus_url: {{ .Values.backend.mimir.url }}

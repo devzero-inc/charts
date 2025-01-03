@@ -118,3 +118,31 @@ Params:
 {{- end }}
 {{- end }}
 {{- end -}}
+
+
+{{/*
+Generate an hexadecimal secret of given length.
+Usage: {{ funcs.randHex 64 }}
+
+Process:
+- Generate ceil(targetLength/2) random bytes using randAscii.
+- Display as hexadecimal; as a byte is written with two hexadecimal digits, we have an output of size 2*ceil(targetLength/2).
+- This means that for odd numbers we have one byte too many. So we just truncate the size of our output to $length, and voilà!
+*/}}
+{{- define "funcs.randHex" -}}
+{{- $length := . }}
+{{- if or (not (kindIs "int" $length)) (le $length 0) }}
+{{- printf "funcs.randHex expects a positive integer (%d passed)" $length | fail }}
+{{- end}}
+{{- printf "%x" (randAscii (divf $length 2 | ceil | int)) | trunc $length }}
+{{- end}}
+
+{{- define "hydra.secret" -}}
+{{- $secretName := printf "%s-secret" (include "devzero.resourceName" (dict "ctx" . "component" "hydra")) -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+{{- if $secret -}}
+HEADSCALE_NOISE_PRIVATE_KEY: {{ $secret.data.HEADSCALE_NOISE_PRIVATE_KEY }}
+{{- else -}}
+HEADSCALE_NOISE_PRIVATE_KEY: {{ printf "privkey:%s" (include "funcs.randHex" 64) | b64enc }}
+{{- end -}}
+{{- end -}}

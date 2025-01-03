@@ -86,6 +86,10 @@ spec:
           env:
             - name: HEADSCALE_CONFIG
               value: "/etc/headscale/self_hosted.yaml"
+          envFrom:
+            - secretRef:
+                name: {{ include "devzero.resourceName" (dict "ctx" . "component" "hydra") }}-secret
+
       volumes:
         - name: config
           configMap:

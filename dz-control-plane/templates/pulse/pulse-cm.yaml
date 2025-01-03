@@ -24,5 +24,4 @@ data:
     mysql_host: {{ .Values.pulse.mysql.host | quote }}
     mysql_port: {{ .Values.pulse.mysql.port }}
     mysql_database: {{ .Values.pulse.mysql.database | quote }}
-    dev_lake_encryption_secret: {{ .Values.pulse.devlake.secret | quote }}
     open_api_token: {{ .Values.pulse.openApi.token | quote }}
