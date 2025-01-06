@@ -74,3 +74,7 @@ dependencies:
     version: 5.6.0-weekly.321
     repository: https://grafana.github.io/helm-charts
     condition: backend.grafana.enabled
+  - name: nats
+    version: 1.2.7
+    repository: https://nats-io.github.io/k8s/helm/charts
+    condition: backend.githubapp.enabled
