@@ -7,9 +7,6 @@ appVersion: "v0.1.4"
 home: https://docs.devzero.io/docs/self-hosted
 icon: https://avatars.githubusercontent.com/u/71745520?s=400&u=10cb3d6fb9e509873fc2591ca11220573399a5de&v=4 # TODO: maybe host this image in devzero.io/static/...
 dependencies:
-  - name: replicated
-    repository: oci://registry.replicated.com/library
-    version: 1.0.0-beta.31
   - name: rook-ceph
     version: 1.14.9
     repository: https://charts.rook.io/release
@@ -22,9 +19,6 @@ dependencies:
   - name: metacontroller-helm
     version: 4.11.19
     repository: oci://ghcr.io/metacontroller
-  - name: cedana-helm
-    version: 0.2.2
-    repository: oci://registry-1.docker.io/cedana
   - name: kube-prometheus-stack
     version: 62.4.0
     repository: https://prometheus-community.github.io/helm-charts

@@ -9,37 +9,11 @@ devzero:
 nodeLabeler:
   enabled: true
 
-cedana-helm:
-  daemonHelper:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: sysbox-install
-                  operator: In
-                  values:
-                    - "yes"
-    image:
-      repository: docker.io/cedana/cedana-helper
-      tag: v0.9.229
-      imagePullPolicy: IfNotPresent
-
-    updateStrategy:
-      maxSurge: 0
-      maxUnavailable: 1
-
-  controllerManager:
-    manager:
-      image:
-        repository: docker.io/cedana/cedana-controller
-        tag: v0.2.6
-        imagePullPolicy: IfNotPresent
-
-  cedanaConfig:
-    cedanaUrl: https://devzero.cedana.ai
-    signozAccessToken: ""
-    cedanaAuthToken: ""
+credentials:
+  registry:
+  username:
+  password:
+  email:
 
 kube-prometheus-stack:
   prometheus:
